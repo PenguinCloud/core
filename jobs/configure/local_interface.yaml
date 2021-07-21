@@ -8,7 +8,7 @@
   ansible.builtin.lineinfile:
     path: "/etc/netplan/10-{{ PriamryIf }}.yaml"
     search_string: enp1s0
-    line: "        {{ PriamryIf }}:"
+    line: "      {{ PriamryIf }}:"
     create: yes
 - name: copy template to internal interface
   copy:
