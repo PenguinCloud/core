@@ -11,6 +11,7 @@
 - name: Install components
   apt:
     pkg:
+      - systemd
       - vim
       - nano
       - netplan.io

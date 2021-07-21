@@ -1,5 +1,16 @@
 ---
-- name: copy template
+- name: copy template to public interface
+  copy:
+    src: "{{ playbook_dir }}/configs/10-netplan.yaml"
+    dest: "/etc/netplan/10-{{ PriamryIf }}.yaml"
+    backup: yes
+- name: update config for name
+  ansible.builtin.lineinfile:
+    path: "/etc/netplan/10-{{ PriamryIf }}.yaml"
+    search_string: enp1s0
+    line: "        {{ PriamryIf }}:"
+    create: yes
+- name: copy template to internal interface
   copy:
     src: "{{ playbook_dir }}/configs/20-netplan.yaml"
     dest: "/etc/netplan/20-{{ nextFreeIf }}.yaml"
