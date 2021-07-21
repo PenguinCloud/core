@@ -1,0 +1,15 @@
+---
+all:
+  hosts:
+    localhost:
+  children:
+    cluster:
+      hosts:
+        localhost:
+      var:
+        environment: prod
+    dev:
+      hosts:
+        localhost:
+      var:
+        environment: dev
