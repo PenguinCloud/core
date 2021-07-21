@@ -1,0 +1,13 @@
+AddressFamily inet
+LoginGraceTime 1m
+PermitRootLogin yes
+StrictModes yes
+MaxAuthTries 3
+MaxSessions 2
+PasswordAuthentication no
+PermitEmptyPasswords no
+AllowAgentForwarding no
+AllowTcpForwarding no
+PermitTunnel no
+
+#Subsystem      sftp    /usr/lib/openssh/sftp-server

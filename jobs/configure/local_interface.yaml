@@ -1,0 +1,19 @@
+---
+- name: copy template
+  copy:
+    src: "{{ playbook_dir }}/configs/20-netplan.yaml"
+    dest: "/etc/netplan/20-{{ nextFreeIf }}.yaml"
+- name: update config for name
+  ansible.builtin.lineinfile:
+    path: "/etc/netplan/20-{{ nextFreeIf }}.yaml"
+    search_string: enp6s0
+    line: "        {{ nextFreeIf }}:"
+    create: yes
+- name: update IP
+  ansible.builtin.lineinfile:
+    path: "/etc/netplan/20-{{ nextFreeIf }}.yaml"
+    search_string: 10.0.0.1/24
+    line: "                - {{ localip }}"
+    create: no
+- name: Initiate netplan
+  shell: netplan apply

@@ -1,0 +1,117 @@
+---
+- name: Install Rancher Cluster Main Node
+  hosts: cluster
+  become: yes
+  remote_user: root
+  roles:
+    - kwoodson.yedit
+  vars_prompt:
+    - name: nextFreeIf
+      prompt: "What is the local interface without an ip or with a number higher than enp3s0?"
+      private: no
+      default: enp6s0
+    - name: localip
+      prompt: "What is the assigned local ip CIDR for your local net device (dont forget the net CIDR)?"
+      private: no
+  vars_files:
+    - vars/server.yaml
+  tasks:
+    - name: Update and get container to standard point
+      include_tasks: 
+        file: jobs/initialize.yaml
+        apply:
+          tags:
+            - enviro
+      tags:
+        - enviro
+    - name: Setup local interface
+      include_tasks:
+        file: jobs/configure/local_interface.yaml
+        apply:
+          tags:
+            - enviro
+            - first
+    - name: Install K3s
+      include_tasks: 
+        file: jobs/install/k3s.yaml
+        apply:
+          tags:
+            - k3s
+            - initial
+      tags:
+        - k3s
+        - initial
+      when: cluster.build == "k3s"
+    - name: Install Kube Utils
+      include_tasks: 
+        file: jobs/install/kubeutils.yaml
+        apply:
+          tags:
+            - enviro
+      tags:
+        - enviro
+    - name: reset kubeadm
+      block:
+        - name: Reset kubeadm
+          shell: kubeadm reset
+          ignore_errors: yes
+        - name: Delete paths
+          file:
+            state: absent
+            path: " {{ item }}"
+          loop:
+            - /etc/kubernetes/
+            - /var/lib/kubelet/
+            - /var/lib/etcd
+      tags: resetkube, never
+    - name: Install k8s
+      include_tasks: 
+        file: jobs/install/k8s.yaml
+        apply:
+          tags:
+            - k8s
+            - initial
+      when: cluster.build == "k8s"
+      tags:
+        - k8s
+        - initial
+    - name: Configure Kubectl
+      include_tasks: 
+        file: jobs/configure/kubectl.yaml
+        apply:
+          tags:
+            - k8s
+            - k3s
+            - kctl
+      tags:
+        - k8s
+        - k3s
+        - kctl
+    - name: Install CNI
+      include_tasks:
+        file: jobs/install/canal.yaml
+        apply:
+          tags:
+            - k8s
+      tags:
+        - k8s
+    - name: Test Kubernetess
+      include_tasks: 
+        file: jobs/tests/kubernetes.yaml
+        apply:
+          tags:
+            - k8s
+            - k3s
+            - test
+      tags:
+        - k8s
+        - k3s
+        - test
+    - name: Install Helm
+      include_tasks: 
+        file: jobs/install/helm.yaml
+        apply:
+          tags:
+            - helm
+      tags:
+        - helm

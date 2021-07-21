@@ -1,0 +1,7 @@
+network:
+    version: 2
+    renderer: networkd
+    ethernets:
+        enp6s0:
+            addresses:
+                - 10.0.0.1/24

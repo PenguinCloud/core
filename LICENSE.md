@@ -1,0 +1,1 @@
+This source code is copyrighted and solely owned by Penguinz Media Group LLC unless otherwise specified by contractual agreements.

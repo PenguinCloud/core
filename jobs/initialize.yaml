@@ -1,0 +1,98 @@
+---
+- name: enable br_netfilter
+  community.general.modprobe:
+    name: br_netfilter
+    state: present
+- name: Update system
+  apt:
+    name: "*"
+    state: latest
+    update_cache: yes
+- name: Install components
+  apt:
+    pkg:
+      - vim
+      - nano
+      - netplan.io
+      - selinux-utils
+      - net-tools
+      - unzip
+      - curl
+      - apt-transport-https
+      - ca-certificates
+      - gnupg2 
+      - software-properties-common
+      - cron
+      - python3-selinux
+      - libselinux1-dev
+    state: latest
+- name: Install Pip libs
+  pip:
+    name:
+      - openshift
+      - kubernetes
+    executable: pip3
+- name: Set system variables
+  ansible.posix.sysctl:
+    name: "{{ item }}"
+    value: 1
+    state: present
+  loop:
+    - net.bridge.bridge-nf-call-ip6tables
+    - net.bridge.bridge-nf-call-iptables
+- name: Fix IP forwarding
+  ansible.posix.sysctl:
+    name: net.ipv4.ip_forward
+    value: '1'
+    sysctl_set: yes
+- name: Disable SELinux
+  shell: setenforce 0
+  ignore_errors: yes
+- name: Clean docker
+  apt:
+    pkg:
+      docker 
+      docker-engine 
+      docker.io 
+      containerd 
+      runc
+    state: absent
+- name: Install Docker GPG Key 
+  ansible.builtin.apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    keyring: /usr/share/keyrings/docker-archive-keyring.gpg
+    state: present
+- name: Get OS code name
+  shell: lsb_release -cs
+  register: release
+- name: Install Docker PPA
+  ansible.builtin.apt_repository:
+    repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu {{ release.stdout }} stable"
+    state: present
+    filename: docker
+    update_cache: yes
+- name: Install Docker-CE (which has less issues with kube and prod apps)
+  apt:
+    pkg: 
+      - docker-ce 
+      - docker-ce-cli 
+      - containerd.io
+    state: present
+- name: Copy Daemon file
+  ansible.builtin.copy:
+    src: daemon.json
+    dest: /etc/docker/daemon.json
+- name: enable overlay
+  community.general.modprobe:
+    name: overlay
+    state: present
+- name: Enable Docker services
+  systemd:
+    name: "{{ item }}"
+    state: started
+    enabled: yes
+    daemon_reload: yes
+  loop: 
+    - docker 
+
+
