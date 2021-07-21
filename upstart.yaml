@@ -1,6 +1,7 @@
 ---
 - name: Install Ansible Host Baseline
   hosts: all
+  strategy: free
   become: yes
   remote_user: root
   roles:
