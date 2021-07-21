@@ -13,8 +13,6 @@
     - name: localip
       prompt: "What is the assigned local ip CIDR for your local net device (dont forget the net CIDR)?"
       private: no
-  vars_files:
-    - vars/server.yaml
   tasks:
     - name: Update and get container to standard point
       include_tasks: 
