@@ -15,7 +15,7 @@ export KUBECONFIG=/root/.kube/config
 echo "Printing your local ip info for the next prompt"
 ip a
 if [ -z $1 ]; then 
-ansible-playbook  upstart.yaml --connection=local --tags primary,control
+ansible-playbook  upstart.yaml --connection=local
 else
 ansible-playbook  upstart.yaml --connection=local --tags $1
 fi
