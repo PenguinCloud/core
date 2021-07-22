@@ -6,9 +6,9 @@
     backup: no
 - name: update config for name
   ansible.builtin.lineinfile:
-    path: "/etc/netplan/10-{{ PriamryIf }}.yaml"
+    path: "/etc/netplan/10-{{ PrimaryIf }}.yaml"
     search_string: enp1s0
-    line: "    {{ PriamryIf }}:"
+    line: "    {{ PrimaryIf }}:"
     create: yes
 - name: copy template to internal interface
   copy:
