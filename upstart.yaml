@@ -15,8 +15,8 @@
         apply:
           tags:
             - enviro
-        tags:
-          - enviro
+      tags:
+        - enviro
     - name: Update and get container to standard point
       include_tasks: 
         file: jobs/run/system.yaml
