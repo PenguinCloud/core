@@ -26,16 +26,16 @@
             - system
       tags:
         - enviro
-    - name: Setup local interface
-        include_tasks:
-          file: jobs/install/autoupdate.yaml
-          apply:
-            tags:
-              - enviro
-              - first
-        tags:
-          - enviro
-          - first
+    - name: Setup twice daily updates
+      include_tasks:
+        file: jobs/install/autoupdate.yaml
+        apply:
+          tags:
+            - enviro
+            - first
+      tags:
+        - enviro
+        - first
     - name: Setup local interface
       include_tasks:
         file: jobs/configure/local_interface.yaml
