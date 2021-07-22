@@ -2,7 +2,7 @@
 - name: copy template to public interface
   copy:
     src: "{{ playbook_dir }}/configs/10-netplan.yaml"
-    dest: "/etc/netplan/10-{{ PriamryIf }}.yaml"
+    dest: "/etc/netplan/10-{{ PrimaryIf }}.yaml"
     backup: no
 - name: update config for name
   ansible.builtin.lineinfile:
