@@ -4,7 +4,7 @@
     src: "{{ playbook_dir }}/configs/10-netplan.yaml"
     dest: "/etc/netplan/10-{{ PrimaryIf }}.yaml"
     backup: no
-    #remote_src: yes
+    remote_src: yes
 - name: update config for name
   ansible.builtin.lineinfile:
     path: "/etc/netplan/10-{{ PrimaryIf }}.yaml"
@@ -15,7 +15,7 @@
   copy:
     src: "{{ playbook_dir }}/configs/20-netplan.yaml"
     dest: "/etc/netplan/20-{{ nextFreeIf }}.yaml"
-    #remote_src: yes
+    remote_src: yes
 - name: update config for name
   ansible.builtin.lineinfile:
     path: "/etc/netplan/20-{{ nextFreeIf }}.yaml"
