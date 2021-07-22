@@ -3,6 +3,10 @@
   community.general.modprobe:
     name: br_netfilter
     state: present
+- name: Update APT Cache
+  apt:
+    update_cache: yes
+    force_apt_get: yes
 - name: Install components
   apt:
     pkg:
@@ -24,7 +28,6 @@
       - python3
       - python3-pip
     state: present
-    update_cache: yes
 - name: Update system
   apt:
     name: "*"
