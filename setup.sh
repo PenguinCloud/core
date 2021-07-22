@@ -14,9 +14,9 @@ fi
 export KUBECONFIG=/root/.kube/config
 
 if [ -z $1 ]; then 
-ansible-playbook  upstart.yaml --connection=local
+ansible-playbook  upstart.yaml
 else
-ansible-playbook  upstart.yaml --connection=local --tags $1
+ansible-playbook  upstart.yaml --tags $1
 fi
 # "resolvectl status" can be used to validate DNS applied (you usually have to scroll down to see them)
 # We have it set to cloudflare as they are our primary dns host for PMG prod
