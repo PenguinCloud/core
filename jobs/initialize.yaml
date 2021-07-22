@@ -23,7 +23,7 @@
       - libselinux1-dev
       - python3
       - python3-pip
-    state: latest
+    state: present
     update_cache: yes
 - name: Update system
   apt:
