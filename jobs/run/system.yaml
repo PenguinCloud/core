@@ -108,7 +108,6 @@
   ansible.builtin.copy:
     src: daemon.json
     dest: /etc/docker/daemon.json
-    remote_src: yes
 - name: enable overlay
   community.general.modprobe:
     name: overlay
