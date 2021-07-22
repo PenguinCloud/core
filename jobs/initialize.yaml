@@ -26,12 +26,15 @@
       - cron
       - python3-selinux
       - libselinux1-dev
+      - python3
+      - python3-pip
     state: latest
 - name: Install Pip libs
   pip:
     name:
       - openshift
       - kubernetes
+      - ansible
     executable: pip3
 - name: Set system variables
   ansible.posix.sysctl:
