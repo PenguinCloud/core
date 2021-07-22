@@ -7,6 +7,8 @@
   apt:
     update_cache: yes
     force_apt_get: yes
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
 - name: Install components
   apt:
     pkg:
