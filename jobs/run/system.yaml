@@ -48,7 +48,8 @@
         state: absent
         force: yes
 - name: Update system
-  command: apt upgrade -y
+  shell:
+    cmd: rm -f /var/lib/dpkg/lock-frontend && apt upgrade -y
 - name: Install Pip libs
   pip:
     name:
@@ -104,7 +105,7 @@
     state: present
 - name: Copy Daemon file
   ansible.builtin.copy:
-    src: daemon.json
+    src: "{{ playbook_dir }}/configs/daemon.json"
     dest: /etc/docker/daemon.json
 - name: enable overlay
   community.general.modprobe:
