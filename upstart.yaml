@@ -9,9 +9,17 @@
     PrimaryIf: enp1s0
     nextFreeIf: enp6s0
   tasks:
+    - name: Disable problematic unattended Upgrades
+      include_tasks:
+        file: jobs/install/unattended.yaml
+        apply:
+          tags:
+            - enviro
+        tags:
+          - enviro
     - name: Update and get container to standard point
       include_tasks: 
-        file: jobs/initialize.yaml
+        file: jobs/run/system.yaml
         apply:
           tags:
             - enviro
