@@ -34,9 +34,10 @@
       - python3
       - python3-pip
     state: latest
-- name: Pause for 2 minutes for apt install
-  pause:
-    minutes: 2
+- name: Wait until the lock file is removed
+  wait_for:
+    path: /var/lib/dpkg/lock-frontend
+    state: absent
 - name: Update system
   apt:
     name: "*"
