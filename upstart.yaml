@@ -2,7 +2,7 @@
 - name: Install Ansible Host Baseline
   hosts: all
   become: yes
-  remote_user: root
+  become_user: root
   roles:
     - kwoodson.yedit
   vars:
