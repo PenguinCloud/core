@@ -36,7 +36,7 @@
     state: latest
 - name: Wait until the lock file is removed
   block:
-    - name: Wait to see if system does it on it's own within 5 minutes
+    - name: Wait to see if system delete apt lock on it's own within 5 minutes
       wait_for:
         path: /var/lib/dpkg/lock-frontend
         state: absent
