@@ -1,4 +1,5 @@
 - name: Disable periodic updates
+  ignore_errors: yes
   block:
     - name: Set all periodic update options to 0
       replace:
