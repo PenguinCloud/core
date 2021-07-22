@@ -12,8 +12,7 @@ else
 cp -f configs/hosts.yaml /etc/ansible/hosts
 fi
 export KUBECONFIG=/root/.kube/config
-echo "Printing your local ip info for the next prompt"
-ip a
+
 if [ -z $1 ]; then 
 ansible-playbook  upstart.yaml --connection=local
 else
