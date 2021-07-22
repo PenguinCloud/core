@@ -41,14 +41,12 @@
         path: /var/lib/dpkg/lock-frontend
         state: absent
         timeout: 300
-      delegate_to: localhost
   rescue:
     - name: System was not able to remove it itself, helping it out
       file:
         path: /var/lib/dpkg/lock-frontend
         state: absent
         force: yes
-      delegate_to: localhost
 - name: Update system
   apt:
     name: "*"
