@@ -1,8 +1,6 @@
 ---
 - name: Install Ansible Host Baseline
   hosts: all
-  strategy: linear
-  serial: 3
   become: yes
   remote_user: root
   roles:
