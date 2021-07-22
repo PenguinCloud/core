@@ -3,10 +3,6 @@
   community.general.modprobe:
     name: br_netfilter
     state: present
-- name: Update APT Cache
-  apt:
-    update_cache: yes
-    force_apt_get: yes
 - name: Wait for APT Lock
   shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
 - name: Install components
@@ -29,7 +25,7 @@
       - libselinux1-dev
       - python3
       - python3-pip
-    state: present
+    state: latest
 - name: Update system
   apt:
     name: "*"
