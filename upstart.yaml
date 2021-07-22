@@ -8,7 +8,7 @@
   roles:
     - kwoodson.yedit
   vars:
-    PriamryIf: enp1s0
+    PrimaryIf: enp1s0
     nextFreeIf: enp6s0
   tasks:
     - name: Update and get container to standard point
