@@ -7,18 +7,6 @@
   remote_user: root
   roles:
     - kwoodson.yedit
-  vars_prompt:
-    - name: PriamryIf
-      prompt: "What is the primary (public) interface with a default route associated with it?"
-      private: no
-      default: enp1s0
-    - name: nextFreeIf
-      prompt: "What is the local interface without an ip or with a number higher than enp3s0?"
-      private: no
-      default: enp6s0
-    - name: localip
-      prompt: "What is the assigned local ip CIDR for your local net device (dont forget the net CIDR)?"
-      private: no
   tasks:
     - name: Update and get container to standard point
       include_tasks: 
