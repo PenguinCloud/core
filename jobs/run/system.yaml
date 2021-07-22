@@ -49,7 +49,7 @@
         force: yes
 - name: Update system
   shell:
-    cmd: rm -f /var/lib/dpkg/lock-frontend && apt upgrade -y
+    cmd: apt upgrade -y
 - name: Install Pip libs
   pip:
     name:
