@@ -5,7 +5,7 @@
     state: stopped
 - name: Disable SystemD Resolve
   systemd:
-    name: systemd-resolved.
+    name: systemd-resolved
     enabled: no
 - name: ensure Systemd resolved is dead
   shell: pkill -9 systemd-resolved
