@@ -17,6 +17,7 @@
             - enviro
       tags:
         - enviro
+      when: runmode == "standard"
     - name: Update and get container to standard point
       include_tasks: 
         file: jobs/run/system.yaml
@@ -60,3 +61,4 @@
         - enviro
         - interface
         - first
+      when: not runmode == "docker"
