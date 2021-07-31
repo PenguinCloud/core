@@ -6,9 +6,8 @@
   remote_user: root
   roles:
     - kwoodson.yedit
-  vars:
-    PrimaryIf: enp1s0
-    nextFreeIf: enp6s0
+  vars_file:
+    - vars/system.yaml
   tasks:
     - name: Disable problematic unattended Upgrades
       include_tasks:
