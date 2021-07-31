@@ -1,0 +1,22 @@
+---
+- name: Update SSH Config
+  copy:
+    src: "{{ playbook_dir }}/configs/sshd_config"
+    dest: /etc/sshd/sshd_config
+    force: yes
+    mode: "0544"
+- name: Create System PMG User
+  ansible.builtin.user:
+    name: pmg-admin
+    generate_ssh_key: yes
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+    shell: /bin/bash
+    groups: admins,developers
+    comment: PMG System User
+- name: Update SSH Config
+  copy:
+    src: "{{ playbook_dir }}/configs/sudoers.txt"
+    dest: /etc/sudoers
+    force: yes
+    mode: "0544"
