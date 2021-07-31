@@ -6,7 +6,7 @@
   remote_user: root
   roles:
     - kwoodson.yedit
-  vars_file:
+  vars_files:
     - vars/system.yaml
   tasks:
     - name: Disable problematic unattended Upgrades
