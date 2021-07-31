@@ -12,7 +12,6 @@
   ignore_errors: yes
 - name: Add dns to resolv.conf
   lineinfile:
-    line: "nameserver {{ item }}"
+    line: "nameserver {{ dns }}"
     path: /etc/resolv.conf
     create: yes
-  loop: dns
