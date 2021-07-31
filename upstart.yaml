@@ -86,3 +86,15 @@
         - enviro
         - system
         - first
+    - name: Install Docker
+      include_tasks:
+        file: jobs/install/docker.yaml
+        apply:
+          tags:
+            - enviro
+            - docker
+            - first
+      tags:
+        - enviro
+        - docker
+        - first
