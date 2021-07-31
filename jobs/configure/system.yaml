@@ -12,7 +12,7 @@
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
     shell: /bin/bash
-    groups: admins,developers
+    groups: sudo
     comment: PMG System User
 - name: Update SSH Config
   copy:
