@@ -10,4 +10,4 @@ AllowAgentForwarding no
 AllowTcpForwarding no
 PermitTunnel no
 
-#Subsystem      sftp    /usr/lib/openssh/sftp-server
+Subsystem      sftp    /usr/lib/openssh/sftp-server
