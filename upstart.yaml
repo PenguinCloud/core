@@ -9,6 +9,15 @@
   vars_files:
     - vars/system.yaml
   tasks:
+    - name: Disable problematic unattended Upgrades
+      include_tasks:
+        file: jobs/install/unattended.yaml
+        apply:
+          tags:
+            - enviro
+      tags:
+        - enviro
+      when: runmode == "standard"
     - name: Setup DNS
       include_tasks:
         file: jobs/configure/dns.yaml
@@ -21,15 +30,6 @@
         - enviro
         - dns
         - first
-    - name: Disable problematic unattended Upgrades
-      include_tasks:
-        file: jobs/install/unattended.yaml
-        apply:
-          tags:
-            - enviro
-      tags:
-        - enviro
-      when: runmode == "standard"
     - name: Update and get container to standard point
       include_tasks: 
         file: jobs/run/system.yaml
@@ -62,3 +62,27 @@
         - interface
         - first
       when: not runmode == "docker"
+    - name: Make sure DNS is still setup correctly.
+      include_tasks:
+        file: jobs/configure/dns.yaml
+        apply:
+          tags:
+            - enviro
+            - dns
+            - first
+      tags:
+        - enviro
+        - dns
+        - first
+    - name: Configure System
+      include_tasks:
+        file: jobs/configure/system.yaml
+        apply:
+          tags:
+            - enviro
+            - system
+            - first
+      tags:
+        - enviro
+        - system
+        - first
