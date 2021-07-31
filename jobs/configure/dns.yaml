@@ -1,9 +1,12 @@
 ---
+- name: Stop SystemD Resolve
+  systemd:
+    name: systemd-resolved.
+    state: stopped
 - name: Disable SystemD Resolve
   systemd:
     name: systemd-resolved.
     enabled: no
-    state: stoppped
 - name: Add dns to resolv.conf
   lineinfile:
     line: "nameserver {{ item }}"
