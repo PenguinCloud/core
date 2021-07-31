@@ -5,6 +5,16 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-galaxy install -r configs/ansible-requirements.yaml
 mkdir -p /etc/ansible
 mkdir -p /root/.kube
+
+FILE=/etc/ansible/ansible.cfg
+if test -f "$FILE"; then
+    echo "$FILE exists, skipping setup."
+else
+  echo "Setting up ansible config file"
+echo "[defaults]" > /etc/ansible/ansible.cfg
+echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
+fi
+
 cd /opt/baseline-ansible-setup
 FILE=/etc/ansible/hosts
 if test -f "$FILE"; then
