@@ -16,6 +16,7 @@
     state: absent
 - name: Add dns to resolv.conf
   lineinfile:
-    line: "nameserver {{ dns }}"
+    line: "nameserver {{ item }}"
     path: /etc/resolv.conf
     create: yes
+  loop: "{{ dns }}"
