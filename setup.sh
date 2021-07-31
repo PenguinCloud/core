@@ -5,6 +5,7 @@ export ANSIBLE_HOST_KEY_CHECKING=False
 ansible-galaxy install -r configs/ansible-requirements.yaml
 mkdir -p /etc/ansible
 mkdir -p /root/.kube
+mkdir -p /etc/sshd
 
 FILE=/etc/ansible/ansible.cfg
 if test -f "$FILE"; then
