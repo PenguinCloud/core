@@ -9,6 +9,7 @@
     enabled: no
 - name: ensure Systemd resolved is dead
   shell: pkill -9 systemd-resolved
+  ignore_errors: yes
 - name: Add dns to resolv.conf
   lineinfile:
     line: "nameserver {{ item }}"
