@@ -25,6 +25,8 @@ cp -f configs/hosts.yaml /etc/ansible/hosts
 fi
 export KUBECONFIG=/root/.kube/config
 
+cp -f configs/hosts.txt /etc/hosts
+
 if [ -z $1 ]; then 
 ansible-playbook -e 'host_key_checking=False' upstart.yaml
 else
