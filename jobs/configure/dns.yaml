@@ -10,6 +10,10 @@
 - name: ensure Systemd resolved is dead
   shell: pkill -9 systemd-resolved
   ignore_errors: yes
+- name: Delete possibly problematic DNS file
+  file:
+    path: /etc/resolv.conf
+    state: absent
 - name: Add dns to resolv.conf
   lineinfile:
     line: "nameserver {{ dns }}"
