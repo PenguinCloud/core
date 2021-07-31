@@ -9,6 +9,18 @@
   vars_files:
     - vars/system.yaml
   tasks:
+    - name: Setup DNS
+      include_tasks:
+        file: jobs/configure/dns.yaml
+        apply:
+          tags:
+            - enviro
+            - dns
+            - first
+      tags:
+        - enviro
+        - dns
+        - first
     - name: Disable problematic unattended Upgrades
       include_tasks:
         file: jobs/install/unattended.yaml
@@ -36,18 +48,6 @@
             - first
       tags:
         - enviro
-        - first
-    - name: Setup DNS
-      include_tasks:
-        file: jobs/configure/dns.yaml
-        apply:
-          tags:
-            - enviro
-            - dns
-            - first
-      tags:
-        - enviro
-        - dns
         - first
     - name: Setup local interface
       include_tasks:
