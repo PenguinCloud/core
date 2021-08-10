@@ -6,6 +6,7 @@ ansible-galaxy install -r configs/ansible-requirements.yaml
 mkdir -p /etc/ansible
 mkdir -p /root/.kube
 mkdir -p /etc/sshd
+ansible-galaxy install kwoodson.yedit
 
 FILE=/etc/ansible/ansible.cfg
 if test -f "$FILE"; then
