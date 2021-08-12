@@ -11,4 +11,4 @@ RUN ansible-galaxy install kwoodson.yedit
 COPY ./configs/hosts.yaml /etc/ansible/hosts
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 ENV runmode="docker"
-ENTRYPOINT ["bash","ansible-playbook /opt/baseline-ansible-setup/upstart.yaml"]
+CMD ansible-playbook /opt/baseline-ansible-setup/upstart.yaml
