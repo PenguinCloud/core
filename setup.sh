@@ -8,7 +8,7 @@ mkdir -p /root/.kube
 mkdir -p /etc/sshd
 ansible-galaxy install kwoodson.yedit
 systemctl enable ssh
-service ssh restart
+systemctl restart ssh
 
 FILE=/etc/ansible/ansible.cfg
 if test -f "$FILE"; then
@@ -30,7 +30,7 @@ export KUBECONFIG=/root/.kube/config
 
 cp -f configs/hosts.txt /etc/hosts
 
-if [ -z $1 ]; then 
+if [ -z $1 ]; then
 ansible-playbook -e 'host_key_checking=False' upstart.yaml
 else
 ansible-playbook -e 'host_key_checking=False' upstart.yaml --tags $1
