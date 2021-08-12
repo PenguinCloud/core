@@ -2,7 +2,7 @@
 apt update && apt install python3 python3-pip openssh-server -y && apt upgrade -y
 pip3 install ansible
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-galaxy install -r configs/ansible-requirements.yaml
+ansible-galaxy install -r ./configs/ansible-requirements.yaml
 mkdir -p /etc/ansible
 mkdir -p /root/.kube
 mkdir -p /etc/sshd
