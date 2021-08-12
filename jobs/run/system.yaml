@@ -16,7 +16,6 @@
 - name: Install components
   apt:
     pkg:
-      - systemd
       - vim
       - nano
       - netplan.io
@@ -34,6 +33,11 @@
       - python3
       - python3-pip
     state: latest
+- name: Install SystemD
+  apt:
+    name: systemd
+    state: latest
+  when: not runmode == "docker"
 - name: Wait until the lock file is removed
   block:
     - name: Wait to see if system delete apt lock on it's own within 2 minutes
