@@ -1,0 +1,6 @@
+---
+- name: Install SystemD
+  apt:
+    name: systemd
+    state: latest
+  when: not runmode == "docker"

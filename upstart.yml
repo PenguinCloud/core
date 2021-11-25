@@ -7,94 +7,102 @@
   roles:
     - kwoodson.yedit
   vars_files:
-    - vars/system.yaml
+    - vars/system.yml
   tasks:
     - name: Disable problematic unattended Upgrades
       include_tasks:
-        file: jobs/build/unattended.yaml
+        file: jobs/build/disableunattended.yml
         apply:
           tags:
-            - enviro
+            - build
+            - metal
       tags:
-        - enviro
-      when: runmode == "standard"
+        - build
+        - metal
+   - name: Setup network interfaces
+      include_tasks:
+        file: jobs/run/networking.yml
+        apply:
+          tags:
+            - interface
+            - build
+            - metal
+      tags:
+        - interface
+        - build
+        - metal
     - name: Setup DNS
       include_tasks:
-        file: jobs/cfg/dns.yaml
+        file: jobs/build/dns.yml
         apply:
           tags:
-            - enviro
             - dns
-            - first
+            - build
       tags:
-        - enviro
         - dns
-        - first
-    - name: Update and get container to standard point
+        - build
+    - name: Install container libraries
       include_tasks: 
-        file: jobs/run/system.yaml
+        file: jobs/build/installlibraries.yml
         apply:
           tags:
-            - enviro
-            - system
+            - build
       tags:
-        - enviro
-    - name: Setup twice daily updates
+        - build
+    - name: Update container libraries
+      include_tasks: 
+        file: jobs/run/update.yml
+        apply:
+          tags:
+            - build
+            - run
+            - update
+      tags:
+        - build
+        - run
+        - update
+    - name: Enable kernel Mods
       include_tasks:
-        file: jobs/build/autoupdate.yaml
+        file: jobs/build/kernelmods.yml
         apply:
           tags:
-            - enviro
-            - first
+            - build
       tags:
-        - enviro
-        - first
-    - name: Setup local interface
+        - build
+      when: kmod
+    - name: Setup twice daily updates via crontab
       include_tasks:
-        file: jobs/cfg/local_interface.yaml
+        file: jobs/build/autoupdate.yml
         apply:
           tags:
-            - enviro
-            - interface
-            - first
+            - build
       tags:
-        - enviro
-        - interface
-        - first
-      when: not runmode == "docker"
-    - name: Make sure DNS is still setup correctly.
+        - build
+    - name: Setup SystemD
       include_tasks:
-        file: jobs/cfg/dns.yaml
+        file: jobs/build/systemd
         apply:
           tags:
-            - enviro
-            - dns
-            - first
+            - build
       tags:
-        - enviro
-        - dns
-        - first
-    - name: Configure System
-      include_tasks:
-        file: jobs/cfg/system.yaml
-        apply:
-          tags:
-            - enviro
-            - system
-            - first
-      tags:
-        - enviro
-        - system
-        - first
+        - build
     - name: Install Docker
       include_tasks:
-        file: jobs/build/docker.yaml
+        file: jobs/build/docker.yml
         apply:
           tags:
-            - enviro
-            - docker
-            - first
+            - metal
+            - build
       tags:
-        - enviro
         - docker
-        - first
+        - build
+      when: docker
+    - name: Install User
+      include_tasks:
+        file: jobs/build/user.yml
+        apply:
+          tags:
+            - build
+      tags:
+        - build
+      when: docker

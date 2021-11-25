@@ -1,20 +1,6 @@
 ---
-- name: enable br_netfilter
-  community.general.modprobe:
-    name: br_netfilter
-    state: present
-  when: not runmode == "docker"
-- name: Wait for APT Lock
-  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
-- name: disable unattended
-  become: yes
-  become_method: sudo
-  apt:
-    name: unattended-upgrades
-    state: absent
-    purge: yes
-    force_apt_get: yes
-- name: Install components
+
+- name: Install APT Libraries
   apt:
     pkg:
       - vim
@@ -34,18 +20,14 @@
       - python3
       - python3-pip
     state: latest
-- name: Install SystemD
-  apt:
-    name: systemd
-    state: latest
-  when: not runmode == "docker"
+
 - name: Wait until the lock file is removed
   block:
     - name: Wait to see if system delete apt lock on it's own within 2 minutes
       wait_for:
         path: /var/lib/dpkg/lock-frontend
         state: absent
-        timeout: 120
+        timeout: 60
   rescue:
     - name: System was not able to remove it itself, helping it out
       file:

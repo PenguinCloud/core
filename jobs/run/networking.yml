@@ -1,0 +1,30 @@
+---
+- name: copy template to public interface
+  copy:
+    src: "{{ playbook_dir }}/configs/10-netplan.yaml"
+    dest: "/etc/netplan/10-{{ interfaces.public }}.yaml"
+    backup: no
+- name: update config for name
+  ansible.builtin.lineinfile:
+    path: "/etc/netplan/10-{{ interfaces.public }}.yaml"
+    search_string: enp1s0
+    line: "    {{ interfaces.public }}:"
+    create: no
+- name: copy template to internal interface
+  copy:
+    src: "{{ playbook_dir }}/configs/20-netplan.yaml"
+    dest: "/etc/netplan/20-{{ interfaces.private}}.yaml"
+- name: update config for name
+  ansible.builtin.lineinfile:
+    path: "/etc/netplan/20-{{ interfaces.private}}.yaml"
+    search_string: enp6s0
+    line: "        {{ interfaces.private}}:"
+    create: no
+- name: update IP
+  ansible.builtin.lineinfile:
+    path: "/etc/netplan/20-{{ interfaces.private}}.yaml"
+    search_string: 10.0.0.1/24
+    line: "                - {{ localip }}"
+    create: no
+- name: Initiate netplan
+  shell: netplan apply
