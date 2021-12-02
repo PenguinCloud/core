@@ -6,6 +6,7 @@
       - vim
       - nano
       - netplan.io
+      - apt-utils
       - selinux-utils
       - net-tools
       - unzip

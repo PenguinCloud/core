@@ -4,7 +4,7 @@ services:
   ptg-ansible:
     build:
       context: .
-      args:
+      #args:
     image: penguintech/ubuntu-ansible
     restart: on-error
     volumes:
