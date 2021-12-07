@@ -22,8 +22,8 @@ COPY configs/hosts.yml /etc/ansible/hosts
 # Move to working Directory
 WORKDIR /opt/core
 # Install Core Components
-RUN apt-get update && apt-get install -y python3 python3-pip && apt-get clean
-RUN pip3 install ansible lxml apt &&  ansible-galaxy collection install community.general
+RUN apt-get update && apt-get install -y python3 python3-pip python3-apt openssh-client && apt-get clean
+RUN pip3 install ansible lxml  &&  ansible-galaxy collection install community.general
 # setup Ansible config
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 # Build backdrop

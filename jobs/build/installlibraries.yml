@@ -18,7 +18,7 @@
       - software-properties-common
       - unzip
       - vim
-    state: latest
+    state: present
 
 - name: Install Metal APT Libraries
   apt:
@@ -28,13 +28,13 @@
       - openssh-server
       - python3-selinux
       - systemd
-    state: latest
+    state: present
   tags:
     - metal
 
 - name: Wait until the lock file is removed
   block:
-    - name: Wait to see if system delete apt lock on it's own within 2 minutes
+    - name: Wait to see if system delete apt lock on it's own within a minute
       wait_for:
         path: /var/lib/dpkg/lock-frontend
         state: absent
@@ -45,11 +45,6 @@
         path: /var/lib/dpkg/lock-frontend
         state: absent
         force: yes
-  tags:
-    - metal
-- name: Update system
-  shell:
-    cmd: apt upgrade -y
 - name: Install Pip libs
   pip:
     name:
