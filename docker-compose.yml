@@ -6,7 +6,6 @@ services:
       context: .
       #args:
     image: penguintech/ubuntu-ansible
-    restart: on-error
     volumes:
       - ptg-vars:/opt/manager/vars
     networks:

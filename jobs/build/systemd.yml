@@ -1,5 +1,0 @@
----
-- name: Install SystemD
-  apt:
-    name: systemd
-    state: latest

@@ -1,26 +1,35 @@
 ---
 
-- name: Install APT Libraries
+- name: Install Core APT Libraries
   apt:
     pkg:
-      - vim
-      - nano
-      - netplan.io
-      - apt-utils
-      - selinux-utils
-      - net-tools
-      - unzip
-      - curl
       - apt-transport-https
+      - apt-utils
+      - bind9-dnsutils
       - ca-certificates
-      - gnupg2
-      - software-properties-common
       - cron
-      - python3-selinux
-      - libselinux1-dev
+      - curl
+      - gnupg2
+      - mariadb-client
+      - nano
       - python3
       - python3-pip
+      - software-properties-common
+      - unzip
+      - vim
     state: latest
+
+- name: Install Metal APT Libraries
+  apt:
+    pkg:
+      - libselinux1-dev
+      - netplan.io
+      - openssh-server
+      - python3-selinux
+      - systemd
+    state: latest
+  tags:
+    - metal
 
 - name: Wait until the lock file is removed
   block:
@@ -35,6 +44,8 @@
         path: /var/lib/dpkg/lock-frontend
         state: absent
         force: yes
+  tags:
+    - metal
 - name: Update system
   shell:
     cmd: apt upgrade -y
@@ -53,14 +64,20 @@
   loop:
     - net.bridge.bridge-nf-call-ip6tables
     - net.bridge.bridge-nf-call-iptables
+  tags:
+    - metal
 - name: Fix IP forwarding
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: '1'
     sysctl_set: yes
+  tags:
+    - metal
 - name: Disable SELinux
   shell: setenforce 0
   ignore_errors: yes
+  tags:
+    - metal
 - name: Clean docker
   apt:
     pkg:
@@ -70,6 +87,8 @@
       containerd 
       runc
     state: absent
+  tags:
+    - metal
 
 
 

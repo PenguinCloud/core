@@ -11,11 +11,11 @@ ARG DOCKER="no"
 ARG CRON_UPDATE="yes"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN mkdir -p /etc/ansible /root/.kube /etc/sshd
-RUN apt-get update && apt-get install -y python3 openssh-server python3-pip cron && apt-get clean
+RUN apt-get update && apt-get install -y python3 python3-pip && apt-get clean
 RUN pip3 install ansible lxml awxkit
 RUN ansible-galaxy collection install community.general
 RUN ansible-galaxy install kwoodson.yedit
 COPY ./vars/hosts.yml /etc/ansible/hosts
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 RUN ansible-playbook /opt/core/upstart.yml -c local --skip-tags metal,run,exec
-ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","-c local", "--skip-tags metal,build"]
+ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","-c local", "--tags run,exec"]

@@ -3,4 +3,4 @@
     name: "Update"
     minute: "0"
     hour: "5,2"
-    job: "bash /opt/baseline-ansible-setup/setup.sh update"
+    job: "ansible-playbook /opt/core/upstart.yml -c local --tags update"

@@ -56,12 +56,10 @@
         file: jobs/run/update.yml
         apply:
           tags:
-            - build
-            - run
+            - always
             - update
       tags:
-        - build
-        - run
+        - always
         - update
     - name: Enable kernel Mods
       include_tasks:
@@ -82,16 +80,6 @@
             - build
       tags:
         - build
-    - name: Setup SystemD
-      include_tasks:
-        file: jobs/build/systemd
-        apply:
-          tags:
-            - build
-            - metal
-      tags:
-        - build
-        - metal
     - name: Install Docker
       include_tasks:
         file: jobs/build/docker.yml
@@ -112,3 +100,7 @@
       tags:
         - build
       when: docker
+    - name: Exec bash
+      shell: bash
+      tags:
+        - exec
