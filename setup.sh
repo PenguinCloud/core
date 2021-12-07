@@ -42,7 +42,7 @@ else
 echo "[defaults]" > /etc/ansible/ansible.cfg
 echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 fi
-ansible-playbook /opt/core/upstart.yml -c local --skip-tags metal,run,exec
+ansible-playbook /opt/core/upstart.yml -c local --skip-tags run,exec #Note this one has skip and next has run these tags
 # Run and Execute live
 if [ -z $1 ]; then
 ansible-playbook -e 'host_key_checking=False' /opt/core/upstart.yml  -t run,exec
