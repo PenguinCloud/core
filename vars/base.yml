@@ -9,3 +9,5 @@ interfaces:
 kmod:  "{{ lookup('env', 'KERNEL_MODS') | default('yes', True) }}"
 docker: "{{ lookup('env', 'DOCKER') | default('yes', True) }}"
 update: "{{ lookup('env', 'CRON_UPDATE') | default('yes', True) }}"
+ip:
+  private: "{{ lookup('env', 'IP_PRIVATE') | default('10.0.0.1/24', True) }}"

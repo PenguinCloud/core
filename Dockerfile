@@ -1,5 +1,5 @@
 FROM ubuntu
-LABEL maintainer="Penguin Tech Group LLC"
+LABEL maintainer="Penguin Technologies Group LLC"
 COPY . /opt/core
 ARG TZ=America/Chicago
 ENV TZ=America/Chicago
@@ -9,13 +9,11 @@ ENV INTERNAL_INTERFACE="enp6s0"
 ARG KERNEL_MODS="no"
 ARG DOCKER="no"
 ARG CRON_UPDATE="yes"
+ENV IP_PRIVATE="10.0.0.1/24"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN mkdir -p /etc/ansible /root/.kube /etc/sshd
 RUN apt-get update && apt-get install -y python3 python3-pip && apt-get clean
-RUN pip3 install ansible lxml
-RUN ansible-galaxy collection install community.general
-#TODO replace below with Jinga2 at some point
-RUN ansible-galaxy install kwoodson.yedit
+RUN pip3 install ansible lxml &&  ansible-galaxy collection install community.general
 COPY ./vars/hosts.yml /etc/ansible/hosts
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 RUN ansible-playbook /opt/core/upstart.yml -c local --skip-tags metal,run,exec

@@ -4,8 +4,6 @@
   become: yes
   become_user: root
   remote_user: root
-  roles:
-    - kwoodson.yedit
   vars_files:
     - vars/base.yml
   tasks:
