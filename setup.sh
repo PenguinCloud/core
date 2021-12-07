@@ -28,8 +28,8 @@ fi
 cd /opt/core
 # Install Core Components
 apt update && apt install python3 python3-pip openssh-client -y && apt upgrade -y
+pip3 install ansible lxml apt
 ansible-galaxy collection install community.general
-pip3 install ansible lxml
 # Enable SSH Server Daemon (metal only)
 systemctl enable ssh
 systemctl restart ssh
