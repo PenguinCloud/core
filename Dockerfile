@@ -27,6 +27,6 @@ RUN pip3 install ansible lxml  &&  ansible-galaxy collection install community.g
 # setup Ansible config
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 # Build backdrop
-RUN ansible-playbook /opt/core/upstart.yml -c local --skip-tags metal,run,exec
+RUN ansible-playbook /opt/core/upstart.yml --connection=local --skip-tags "metal,run,exec"
 # Run and Execute live
-ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","-c local", "-t run,exec"]
+ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","--connection=local", "--tags=run,exec"]
