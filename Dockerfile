@@ -12,8 +12,9 @@ ARG CRON_UPDATE="yes"
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN mkdir -p /etc/ansible /root/.kube /etc/sshd
 RUN apt-get update && apt-get install -y python3 python3-pip && apt-get clean
-RUN pip3 install ansible lxml awxkit
+RUN pip3 install ansible lxml
 RUN ansible-galaxy collection install community.general
+#TODO replace below with Jinga2 at some point
 RUN ansible-galaxy install kwoodson.yedit
 COPY ./vars/hosts.yml /etc/ansible/hosts
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
