@@ -8,4 +8,4 @@ interfaces:
   private: "{{ lookup('env', 'INTERNAL_INTERFACE') | default('enp6s0', True) }}"
 kmod:  "{{ lookup('env', 'KERNEL_MODS') | default('yes', True) }}"
 docker: "{{ lookup('env', 'DOCKER') | default('yes', True) }}"
-update: "{{ lookup('env', 'CRON_UPDATE') | default('yes', True) }}
+update: "{{ lookup('env', 'CRON_UPDATE') | default('yes', True) }}"

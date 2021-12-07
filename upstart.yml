@@ -7,7 +7,7 @@
   roles:
     - kwoodson.yedit
   vars_files:
-    - vars/system.yml
+    - vars/base.yml
   tasks:
     - name: Disable problematic unattended Upgrades
       include_tasks:
@@ -19,7 +19,7 @@
       tags:
         - build
         - metal
-   - name: Setup network interfaces
+    - name: Setup network interfaces
       include_tasks:
         file: jobs/run/networking.yml
         apply:
@@ -38,9 +38,11 @@
           tags:
             - dns
             - build
+            - metal
       tags:
         - dns
         - build
+        - metal
     - name: Install container libraries
       include_tasks: 
         file: jobs/build/installlibraries.yml
@@ -67,8 +69,10 @@
         apply:
           tags:
             - build
+            - metal
       tags:
         - build
+        - metal
       when: kmod
     - name: Setup twice daily updates via crontab
       include_tasks:
@@ -84,8 +88,10 @@
         apply:
           tags:
             - build
+            - metal
       tags:
         - build
+        - metal
     - name: Install Docker
       include_tasks:
         file: jobs/build/docker.yml

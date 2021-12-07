@@ -1,7 +1,7 @@
 ---
 - name: copy template to public interface
   copy:
-    src: "{{ playbook_dir }}/configs/10-netplan.yaml"
+    src: "{{ playbook_dir }}/configs/10-netplan.yml"
     dest: "/etc/netplan/10-{{ interfaces.public }}.yaml"
     backup: no
 - name: update config for name
@@ -12,7 +12,7 @@
     create: no
 - name: copy template to internal interface
   copy:
-    src: "{{ playbook_dir }}/configs/20-netplan.yaml"
+    src: "{{ playbook_dir }}/configs/20-netplan.yml"
     dest: "/etc/netplan/20-{{ interfaces.private}}.yaml"
 - name: update config for name
   ansible.builtin.lineinfile:

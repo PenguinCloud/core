@@ -17,5 +17,5 @@ RUN ansible-galaxy collection install community.general
 RUN ansible-galaxy install kwoodson.yedit
 COPY ./vars/hosts.yml /etc/ansible/hosts
 RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
-RUN ansible-playbook upstart.yml -c local --tags build,docker
-ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","-c local", "--tags run,docker"]
+RUN ansible-playbook /opt/core/upstart.yml -c local --skip-tags metal,run,exec
+ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","-c local", "--skip-tags metal,build"]
