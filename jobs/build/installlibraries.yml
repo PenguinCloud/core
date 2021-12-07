@@ -1,60 +1,62 @@
 ---
-- name: enable br_netfilter
-  community.general.modprobe:
-    name: br_netfilter
-    state: present
-  when: not runmode == "docker"
-- name: Wait for APT Lock
-  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
-- name: disable unattended
-  become: yes
-  become_method: sudo
-  apt:
-    name: unattended-upgrades
-    state: absent
-    purge: yes
-    force_apt_get: yes
-- name: Install components
-  apt:
-    pkg:
-      - vim
-      - nano
-      - netplan.io
-      - selinux-utils
-      - net-tools
-      - unzip
-      - curl
-      - apt-transport-https
-      - ca-certificates
-      - gnupg2
-      - software-properties-common
-      - cron
-      - python3-selinux
-      - libselinux1-dev
-      - python3
-      - python3-pip
-    state: latest
-- name: Install SystemD
-  apt:
-    name: systemd
-    state: latest
-  when: not runmode == "docker"
 - name: Wait until the lock file is removed
   block:
-    - name: Wait to see if system delete apt lock on it's own within 2 minutes
+    - name: Wait to see if system delete apt lock on it's own within a minute
       wait_for:
         path: /var/lib/dpkg/lock-frontend
         state: absent
-        timeout: 120
+        timeout: 60
   rescue:
     - name: System was not able to remove it itself, helping it out
       file:
         path: /var/lib/dpkg/lock-frontend
         state: absent
         force: yes
-- name: Update system
-  shell:
-    cmd: apt upgrade -y
+- name: Install Core APT Libraries
+  apt:
+    pkg:
+      - apt-transport-https
+      - apt-utils
+      - bind9-dnsutils
+      - ca-certificates
+      - cron
+      - curl
+      - gnupg2
+      - mariadb-client
+      - nano
+      - openssh-client
+      - python3
+      - python3-pip
+      - software-properties-common
+      - unzip
+      - vim
+    state: present
+
+- name: Install Metal APT Libraries
+  apt:
+    pkg:
+      - libselinux1-dev
+      - netplan.io
+      - openssh-server
+      - python3-selinux
+      - systemd
+    state: present
+  tags:
+    - metal
+
+- name: Wait until the lock file is removed
+  block:
+    - name: Wait to see if system delete apt lock on it's own within a minute
+      wait_for:
+        path: /var/lib/dpkg/lock-frontend
+        state: absent
+        timeout: 60
+  rescue:
+    - name: System was not able to remove it itself, helping it out
+      file:
+        path: /var/lib/dpkg/lock-frontend
+        state: absent
+        force: yes
 - name: Install Pip libs
   pip:
     name:
@@ -70,14 +72,20 @@
   loop:
     - net.bridge.bridge-nf-call-ip6tables
     - net.bridge.bridge-nf-call-iptables
+  tags:
+    - metal
 - name: Fix IP forwarding
   ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: '1'
     sysctl_set: yes
+  tags:
+    - metal
 - name: Disable SELinux
   shell: setenforce 0
   ignore_errors: yes
+  tags:
+    - metal
 - name: Clean docker
   apt:
     pkg:
@@ -87,6 +95,8 @@
       containerd 
       runc
     state: absent
+  tags:
+    - metal
 
 
 

@@ -1,0 +1,6 @@
+---
+- name: Update system cache
+  shell: |
+    apt update
+    apt dist-upgrade -y
+    apt clean
