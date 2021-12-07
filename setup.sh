@@ -1,15 +1,39 @@
 #!/bin/bash
-apt update && apt install python3 python3-pip openssh-server -y && apt upgrade -y
-pip3 install ansible
+# setup.sh is the same as Dockerfile but for metal hosts
+
+# Set ENV variables
+export TZ=America/Chicago
+export DNS="1.1.1.1"
+export PUBLIC_INTERFACE="enp1s0"
+export INTERNAL_INTERFACE="enp6s0"
+export KERNEL_MODS="yes"
+export DOCKER="yes"
+export CRON_UPDATE="yes"
+export IP_PRIVATE="10.0.0.1/24"
 export ANSIBLE_HOST_KEY_CHECKING=False
-ansible-galaxy install -r ./configs/ansible-requirements.yaml
-mkdir -p /etc/ansible
-mkdir -p /root/.kube
-mkdir -p /etc/sshd
-ansible-galaxy install kwoodson.yedit
+export KUBECONFIG=/root/.kube/config
+# Set Timezone
+ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+# Make Dirs
+mkdir -p /etc/ansible /root/.kube /etc/sshd
+# Copy Files
+cp -rfu * /opt/core
+FILE=/etc/ansible/hosts
+if test -f "$FILE"; then
+    echo "$FILE exists, skipping setup."
+else
+cp -f ./configs/hosts.yml /etc/ansible/hosts
+fi
+# Move to working Directory
+cd /opt/core
+# Install Core Components
+apt update && apt install python3 python3-pip openssh-client -y python3-apt && apt upgrade -y
+pip3 install ansible lxml
+ansible-galaxy collection install community.general
+# Enable SSH Server Daemon (metal only)
 systemctl enable ssh
 systemctl restart ssh
-
+# setup Ansible config if not already there
 FILE=/etc/ansible/ansible.cfg
 if test -f "$FILE"; then
     echo "$FILE exists, skipping setup."
@@ -18,22 +42,12 @@ else
 echo "[defaults]" > /etc/ansible/ansible.cfg
 echo "host_key_checking = False" >> /etc/ansible/ansible.cfg
 fi
-
-cd /opt/baseline-ansible-setup
-FILE=/etc/ansible/hosts
-if test -f "$FILE"; then
-    echo "$FILE exists, skipping setup."
-else
-cp -f ./configs/hosts.yaml /etc/ansible/hosts
-fi
-export KUBECONFIG=/root/.kube/config
-
-cp -f ./configs/hosts.txt /etc/hosts
-
+ansible-playbook /opt/core/upstart.yml -c local --skip-tags run,exec #Note this one has skip and next has run these tags
+# Run and Execute live
 if [ -z $1 ]; then
-ansible-playbook -e 'host_key_checking=False' upstart.yaml
+ansible-playbook -e 'host_key_checking=False' /opt/core/upstart.yml  -t run,exec
 else
-ansible-playbook -e 'host_key_checking=False' upstart.yaml --tags $1
+ansible-playbook -e 'host_key_checking=False' /opt/core/upstart.yml  -t $1
 fi
 # "resolvectl status" can be used to validate DNS applied (you usually have to scroll down to see them)
 # We have it set to cloudflare as they are our primary dns host for PMG prod

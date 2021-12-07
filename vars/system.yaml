@@ -1,7 +1,0 @@
----
-dns:
-  - 1.1.1.1
-  - 8.8.8.8
-PrimaryIf: enp1s0
-nextFreeIf: enp6s0
-runmode:  "{{ lookup('env', 'runmode') | default('native', True) }}" # standard, docker, minimal are the two options here
