@@ -1,0 +1,11 @@
+---
+- name: Wait for APT Lock
+  shell:  while fuser /var/lib/dpkg/lock >/dev/null 2>&1; do sleep 5; done;
+- name: disable unattended
+  become: yes
+  become_method: sudo
+  apt:
+    name: unattended-upgrades
+    state: absent
+    purge: yes
+    force_apt_get: yes
