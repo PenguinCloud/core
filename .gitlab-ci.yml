@@ -3,8 +3,8 @@ before_script:
 
 build_image:
   script:
-    - docker build -t my-docker-image .
-    - docker push "$CI_REGISTRY_IMAGE${tag}"
+    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker push "$CI_REGISTRY_IMAGE"
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH
