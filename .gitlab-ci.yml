@@ -3,6 +3,7 @@ before_script:
 
 build_image:
   script:
+    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN code-dal1.penguintech.group
     - docker build -t $CI_REGISTRY_IMAGE .
     - docker push "$CI_REGISTRY_IMAGE"
   # Run this job in a branch where a Dockerfile exists
@@ -10,3 +11,6 @@ build_image:
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
+include:
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Security/Secret-Detection.gitlab-ci.yml
