@@ -1,17 +1,4 @@
 ---
-- name: Wait until the lock file is removed
-  block:
-    - name: Wait to see if system delete apt lock on it's own within a minute
-      wait_for:
-        path: /var/lib/dpkg/lock-frontend
-        state: absent
-        timeout: 60
-  rescue:
-    - name: System was not able to remove it itself, helping it out
-      file:
-        path: /var/lib/dpkg/lock-frontend
-        state: absent
-        force: yes
 - name: Install Core APT Libraries
   apt:
     pkg:
@@ -31,32 +18,6 @@
       - unzip
       - vim
     state: present
-
-- name: Install Metal APT Libraries
-  apt:
-    pkg:
-      - libselinux1-dev
-      - netplan.io
-      - openssh-server
-      - python3-selinux
-      - systemd
-    state: present
-  tags:
-    - metal
-
-- name: Wait until the lock file is removed
-  block:
-    - name: Wait to see if system delete apt lock on it's own within a minute
-      wait_for:
-        path: /var/lib/dpkg/lock-frontend
-        state: absent
-        timeout: 60
-  rescue:
-    - name: System was not able to remove it itself, helping it out
-      file:
-        path: /var/lib/dpkg/lock-frontend
-        state: absent
-        force: yes
 - name: Install Pip libs
   pip:
     name:
@@ -64,39 +25,6 @@
       - kubernetes
       - ansible
     executable: pip3
-- name: Set system variables
-  ansible.posix.sysctl:
-    name: "{{ item }}"
-    value: 1
-    state: present
-  loop:
-    - net.bridge.bridge-nf-call-ip6tables
-    - net.bridge.bridge-nf-call-iptables
-  tags:
-    - metal
-- name: Fix IP forwarding
-  ansible.posix.sysctl:
-    name: net.ipv4.ip_forward
-    value: '1'
-    sysctl_set: yes
-  tags:
-    - metal
-- name: Disable SELinux
-  shell: setenforce 0
-  ignore_errors: yes
-  tags:
-    - metal
-- name: Clean docker
-  apt:
-    pkg:
-      docker 
-      docker-engine 
-      docker.io 
-      containerd 
-      runc
-    state: absent
-  tags:
-    - metal
 
 
 
