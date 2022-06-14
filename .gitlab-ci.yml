@@ -4,7 +4,7 @@ stages:
 
 before_script:
   - docker info
-  - docker build --pull ubuntu
+  - docker build --pull
   - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
 
 build:
