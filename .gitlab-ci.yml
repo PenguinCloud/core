@@ -22,6 +22,7 @@ build:
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
+    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
         
 #include:
 #  - template: Security/SAST.gitlab-ci.yml
