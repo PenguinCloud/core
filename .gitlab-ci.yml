@@ -4,7 +4,7 @@ before_script:
 build_image:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
-    - docker build -t $CI_REGISTRY_IMAGE .
+    - docker build -t $CI_REGISTRY_IMAGE-$CI_MERGE_REQUEST_MILESTONE-$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME .
     - docker push $CI_REGISTRY_IMAGE
   # Run this job in a branch where a Dockerfile exists
   rules:
