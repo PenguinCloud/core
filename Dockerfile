@@ -29,4 +29,4 @@ RUN echo "[defaults]" > /etc/ansible/ansible.cfg && echo "host_key_checking = Fa
 # Build backdrop
 RUN ansible-playbook /opt/core/upstart.yml --connection=local --skip-tags "metal,run,exec"
 # Run and Execute live
-ENTRYPOINT ["ansible-playbook","/opt/core/upstart.yml","--connection=local", "--tags=run,exec"]
+ENTRYPOINT ["/usr/bin/bash","entrypoint.sh"]
