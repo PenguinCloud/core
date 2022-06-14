@@ -1,7 +1,7 @@
 ---
 - name: Install needed libaries
-  include_task: "{{ playbvook_dir }}/jobs/build/libaries.yml"
+  include_tasks: "{{ playbvook_dir }}/jobs/build/libaries.yml"
 - name: Install user
-  include_task: "{{ playbvook_dir }}/jobs/build/user.yml"
+  include_tasks: "{{ playbvook_dir }}/jobs/build/user.yml"
 - name: Install autoupdate
-  include_task: "{{ playbvook_dir }}/jobs/build/update.yml"
+  include_tasks: "{{ playbvook_dir }}/jobs/build/update.yml"
