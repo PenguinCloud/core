@@ -3,9 +3,9 @@ before_script:
 
 build_image:
   script:
-    - docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN code-dal1.penguintech.group
+    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $CI_REGISTRY_IMAGE .
-    - docker push "$CI_REGISTRY_IMAGE"
+    - docker push $CI_REGISTRY_IMAGE
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH
