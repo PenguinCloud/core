@@ -1,10 +1,15 @@
 # PenguinTech
+stages:
+  - build
+
 before_script:
   - docker info
-build_image:
+  - docker build --pull ubuntu
+  - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
+
+build:
   stage: build
   script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_JOB_TOKEN $CI_REGISTRY
     - docker build -t $CI_MERGE_REQUEST_MILESTONE$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME .
     - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
   # Run this job in a branch where a Dockerfile exists
@@ -12,6 +17,7 @@ build_image:
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
+        
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml
