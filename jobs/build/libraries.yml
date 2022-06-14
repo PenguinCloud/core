@@ -1,0 +1,30 @@
+---
+- name: Install Core APT Libraries
+  apt:
+    pkg:
+      - apt-transport-https
+      - apt-utils
+      - bind9-dnsutils
+      - ca-certificates
+      - cron
+      - curl
+      - gnupg2
+      - mariadb-client
+      - nano
+      - openssh-client
+      - python3
+      - python3-pip
+      - software-properties-common
+      - unzip
+      - vim
+    state: present
+- name: Install Pip libs
+  pip:
+    name:
+      - openshift
+      - kubernetes
+      - ansible
+    executable: pip3
+
+
+
