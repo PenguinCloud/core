@@ -20,7 +20,7 @@ before_script:
 build:
   stage: build
   script:
-    - docker build -t $IMAGE_TAG .
+    - docker build -t $CI_PROJECT_NAME:$IMAGE_TAG .
     - docker image tag  $CI_PROJECT_NAME:$IMAGE_TAG $CI_REGISTRY_IMAGE:$IMAGE_TAG
     - docker push $CI_REGISTRY_IMAGE:$IMAGE_TAG
   # Run this job in a branch where a Dockerfile exists
