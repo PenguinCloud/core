@@ -31,10 +31,10 @@ build:
 deploy:
   stage: deploy
   script:
-    - docker build -t $CI_PROJECT_NAME:stable .
-    - docker image tag  $CI_PROJECT_NAME:stable $CI_REGISTRY_IMAGE:stable
-    - docker push $CI_REGISTRY_IMAGE:stable
-  # Run this job in a branch where a Dockerfile exists
+    - docker build -t $CI_PROJECT_NAME .
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+  # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
     - if: $CI_PIPELINE_SOURCE == "schedule"
     - if: $CI_COMMIT_BRANCH == "main"
