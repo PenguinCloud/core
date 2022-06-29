@@ -35,6 +35,8 @@ deploy:
     - docker push $CI_REGISTRY_IMAGE:stable
   # Run this job in a branch where a Dockerfile exists
   rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_BRANCH == "main"
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
