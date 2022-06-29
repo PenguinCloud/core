@@ -2,6 +2,7 @@
     
 stages:
   - test
+  - build
   - deploy
 
 variables:
