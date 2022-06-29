@@ -1,7 +1,6 @@
 # PenguinTech
     
 stages:
-  - build
   - test
   - deploy
 
