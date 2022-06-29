@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 LABEL maintainer="Penguin Technologies Group LLC"
 
 # Set Timezone
@@ -21,7 +21,7 @@ WORKDIR /opt/core
 
 # Install Core Components
 RUN apt-get update && apt-get install -y python3 python3-pip python3-apt openssh-client && apt-get autoremove -y
-RUN pip3 install ansible lxml \
+RUN pip3 install ansible lxml
 RUN ansible-galaxy collection install community.general
 
 # Build backdrop
