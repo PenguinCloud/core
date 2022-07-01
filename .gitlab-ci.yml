@@ -1,11 +1,9 @@
 # PenguinTech
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     
 stages:
   - test
   - build
+  - deploy
 
 variables:
   IMAGE_TAG: $CI_MERGE_REQUEST_MILESTONE$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
@@ -29,7 +27,21 @@ build:
       exists:
         - Dockerfile
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-        
+    
+deploy:
+  stage: deploy
+  script:
+    - docker build -t $CI_PROJECT_NAME .
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+  # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "schedule"
+    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH
+      exists:
+        - Dockerfile
+    - if: $CI_PIPELINE_SOURCE != 'merge_request_event'        
 include:
   - template: Security/SAST.gitlab-ci.yml
   - template: Security/Secret-Detection.gitlab-ci.yml

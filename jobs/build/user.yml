@@ -18,9 +18,4 @@
     dest: /etc/sshd/sshd_config
     force: yes
     mode: "0544"
-- name: Update Sudoers Config
-  copy:
-    src: "{{ playbook_dir }}/configs/sudoers.txt"
-    dest: /etc/sudoers
-    force: yes
-    mode: "0544"
+
