@@ -11,7 +11,7 @@ variables:
 before_script:
   - docker info
   - docker pull ubuntu
-  - cat ~/.docker/token | docker login --password-stdindocker -u cicd  $CI_REGISTRY 
+  - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY 
   - echo my image that is  $CI_PROJECT_NAME:$IMAGE_TAG
 
 
