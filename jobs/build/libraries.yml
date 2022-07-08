@@ -8,14 +8,24 @@
       - ca-certificates
       - cron
       - curl
+      - dnsutils
+      - g++
+      - git
+      - inetutils-tools
       - gnupg2
+      - lsof
       - mariadb-client
       - nano
+      - net-tools
       - openssh-client
       - python3
       - python3-pip
       - software-properties-common
+      - uidmap
       - unzip
+      - uuid
+      - uuid-dev
+      - zip
       - vim
     state: present
 - name: Install Pip libs
