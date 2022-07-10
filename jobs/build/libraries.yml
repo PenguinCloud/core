@@ -21,6 +21,7 @@
       - python3
       - python3-pip
       - software-properties-common
+      - sudo
       - uidmap
       - unzip
       - uuid
