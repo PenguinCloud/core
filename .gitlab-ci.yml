@@ -17,6 +17,11 @@ before_script:
 
 build:
   stage: build
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   script:
     - docker build -t $CI_PROJECT_NAME:$IMAGE_TAG .
     - docker image tag  $CI_PROJECT_NAME:$IMAGE_TAG $CI_REGISTRY_IMAGE:$IMAGE_TAG
@@ -30,6 +35,11 @@ build:
     
 deploy:
   stage: deploy
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
   script:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
