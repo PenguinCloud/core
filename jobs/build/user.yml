@@ -1,13 +1,13 @@
 ---
-- name: Create System PMG User
+- name: Create System PTG User
   ansible.builtin.user:
-    name: pmg-admin
+    name: {{ run.user }}
     generate_ssh_key: yes
     ssh_key_bits: 4096
     ssh_key_file: .ssh/id_rsa
     shell: /bin/bash
     groups: sudo
-    comment: PMG System User
+    comment: PTG System User
 - name: Create SSHD directory if doesnt exist
   file:
     state: directory
