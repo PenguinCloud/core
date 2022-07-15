@@ -3,7 +3,6 @@
 stages:
   - test
   - build
-  - deploy
 
 variables:
   IMAGE_TAG: $CI_MERGE_REQUEST_MILESTONE$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
@@ -33,8 +32,8 @@ build:
         - Dockerfile
     - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
     
-deploy:
-  stage: deploy
+stable:
+  stage: build
   retry:
     max: 2
     when:
@@ -43,6 +42,7 @@ deploy:
   script:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:latest
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
