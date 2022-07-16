@@ -8,16 +8,12 @@ workflow:
 stages:
   - build
   - test
-  - deploy
-
-variables:
-  IMAGE_TAG: $CI_MERGE_REQUEST_MILESTONE$CI_MERGE_REQUEST_SOURCE_BRANCH_NAME
 
 before_script:
   - docker info
   - docker pull ubuntu
   - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY 
-  - echo my image that is  $CI_PROJECT_NAME:$IMAGE_TAG
+
 alpha:
   stage: build
   retry:
@@ -32,29 +28,23 @@ alpha:
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
-  except:
-    - schedules
 
 
 beta:
   stage: build
-  tags:
-    - CICD
-    - MERGE
   retry:
     max: 2
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
   script:
-    - docker build -t $CI_PROJECT_NAME:$CI_MERGE_REQUEST_MILESTONEbeta .
-    - docker image tag  $CI_PROJECT_NAME:$IMAGE_TAG $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONEbeta
-    - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONEbeta
+    - docker build -t $CI_PROJECT_NAME:beta .
+    - docker image tag  $CI_PROJECT_NAME:$IMAGE_TAG $CI_REGISTRY_IMAGE:beta
+    - docker push $CI_REGISTRY_IMAGE:beta
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
-  except:
-    - schedules
+
 
 prod-merge:
   stage: build
@@ -74,11 +64,8 @@ prod-merge:
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
-  except:
-    - schedules
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "merge_request_event"
 
 
 prod-sched:
@@ -95,8 +82,5 @@ prod-sched:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
-  only:
-    - schedules
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "schedule"
