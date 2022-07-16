@@ -25,7 +25,7 @@ alpha:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
     - docker push $CI_REGISTRY_IMAGE:alpha
-  # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
+  # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
@@ -62,7 +62,7 @@ prod-merge:
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
 
 
 prod-sched:
@@ -78,7 +78,7 @@ prod-sched:
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
-  # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
+  # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == 'schedule'
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'schedule'
 
