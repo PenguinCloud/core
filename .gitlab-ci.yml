@@ -37,8 +37,8 @@ beta:
       - runner_system_failure
       - stuck_or_timeout_failure
   script:
-    - docker build -t $CI_PROJECT_NAME:beta .
-    - docker image tag  $CI_PROJECT_NAME:$IMAGE_TAG $CI_REGISTRY_IMAGE:beta
+    - docker build -t $CI_PROJECT_NAME  .
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:beta
     - docker push $CI_REGISTRY_IMAGE:beta
   # Run this job in a branch where a Dockerfile exists
   rules:
