@@ -48,6 +48,7 @@ prod-merge:
   stage: build
   release:
     tag_name: $CI_MERGE_REQUEST_MILESTONE
+    description: "A CICD release"
   retry:
     max: 2
     when:
