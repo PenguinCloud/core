@@ -28,10 +28,6 @@ alpha:
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
-<<<<<<< HEAD
-
-=======
->>>>>>> 0036baf3b9c259000c175e00ebd3347aa6424887
 
 beta:
   stage: build
@@ -47,10 +43,6 @@ beta:
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
-<<<<<<< HEAD
-
-=======
->>>>>>> 0036baf3b9c259000c175e00ebd3347aa6424887
 
 prod-merge:
   stage: build
@@ -69,15 +61,8 @@ prod-merge:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
-<<<<<<< HEAD
-  # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "merge_request_event"
-=======
-  rules:
-    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "merge_request_event"
-
->>>>>>> 0036baf3b9c259000c175e00ebd3347aa6424887
 
 
 prod-sched:
@@ -95,8 +80,5 @@ prod-sched:
     - docker push $CI_REGISTRY_IMAGE:stable
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
-<<<<<<< HEAD
-    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "schedule"
-=======
     - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == 'schedule'
->>>>>>> 0036baf3b9c259000c175e00ebd3347aa6424887
+
