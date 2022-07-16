@@ -14,7 +14,7 @@ before_script:
   - echo my image that is  $CI_PROJECT_NAME:$IMAGE_TAG
 
 
-build:
+merge:
   stage: build
   retry:
     max: 2
@@ -47,6 +47,8 @@ dev:
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH != "main"
+    - if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME == ''
+    - if: $CI_MERGE_REQUEST_MILESTONE == ''
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
