@@ -24,6 +24,8 @@ RUN apt-get update && apt-get install -y python3 python3-pip python3-apt openssh
 RUN pip3 install ansible lxml
 RUN ansible-galaxy collection install community.general
 
+ARG APP_TITLE="ptg-docker-core"
+ENV APP_TITLE="ptg-docker-core"
 # Build backdrop
 RUN ansible-playbook /opt/core/build.yml --connection=local
 
