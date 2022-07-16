@@ -32,9 +32,6 @@ alpha:
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
-  except:
-    - schedules
-
 
 beta:
   stage: build
@@ -53,8 +50,6 @@ beta:
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
-  except:
-    - schedules
 
 prod-merge:
   stage: build
@@ -73,12 +68,9 @@ prod-merge:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
-  # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
-  except:
-    - schedules
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == "merge_request_event"
+
 
 
 prod-sched:
@@ -95,8 +87,5 @@ prod-sched:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
   # Run this job in a branch where a Dockerfile exists and on a scheduled build on main
-  only:
-    - schedules
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
-    - if: $CI_PIPELINE_SOURCE != 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == "main" and $CI_PIPELINE_SOURCE == 'schedule'
