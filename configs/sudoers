@@ -19,7 +19,7 @@ Defaults:root   !requiretty
 
 # User privilege specification
 root    ALL=(ALL:ALL) ALL
-pmg-admin ALL=NOPASSWD:SETENV: ALL
+{{ run.user }} ALL=NOPASSWD:SETENV: ALL
 
 # Members of the admin group may gain root privileges
 %admin ALL=(ALL) ALL
@@ -27,6 +27,5 @@ pmg-admin ALL=NOPASSWD:SETENV: ALL
 # Allow members of group sudo to execute any command
 %sudo   ALL=(ALL:ALL) ALL
 
-# See sudoers(5) for more information on "#include" directives:
+#includedir /etc/sudoers.d
 
-includedir /etc/sudoers.d
