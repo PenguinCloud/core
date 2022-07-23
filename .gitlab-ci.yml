@@ -85,5 +85,6 @@ prod-sched:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'schedule'
 
 after_script:
+  - docker image rm $CI_PROJECT_NAME  -f
   - docker image prune -f
   - docker container prune -f
