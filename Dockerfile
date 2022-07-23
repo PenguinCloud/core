@@ -14,7 +14,7 @@ RUN mkdir -p /etc/Ansible
 COPY . /opt/core
 COPY configs/hosts.yml /etc/ansible/hosts
 COPY configs/ansible.cfg /etc/ansible/ansible.cfg
-COPY configs/sudoers /etc/sudoers
+
 
 # Move to working Directory
 WORKDIR /opt/core
