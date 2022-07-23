@@ -8,6 +8,7 @@ workflow:
 stages:
   - build
   - test
+  - cleanup
 
 before_script:
   - docker info
@@ -83,3 +84,6 @@ prod-sched:
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'schedule'
 
+after_script:
+  - docker image prune -f
+  - docker container prune -f
