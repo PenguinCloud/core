@@ -38,9 +38,10 @@ beta2main:
     tag_name: $CI_MERGE_REQUEST_MILESTONE
     description: "A CICD release"
     assets:
-      - name: 'Docker Image'
-        url: '$CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE'
-        link_type: 'image' 
+      links:
+        - name: 'Docker Image'
+          url: '$CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE'
+          link_type: 'image' 
   retry:
     max: 2
     when:
