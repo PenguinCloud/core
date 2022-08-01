@@ -14,8 +14,9 @@ before_script:
   - docker info
   - docker pull ubuntu:20.04
   - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY 
+  - echo "Milestone $CI_MERGE_REQUEST_MILESTONE"
 
-alpha-merge:
+alpha:
   stage: build
   retry:
     max: 2
@@ -28,7 +29,7 @@ alpha-merge:
     - docker push $CI_REGISTRY_IMAGE:alpha
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
-    - if: $CI_COMMIT_BRANCH == "alpha" && $CI_PIPELINE_SOURCE == 'merge_request_event'
+    - if: $CI_COMMIT_BRANCH == "alpha"
 
 beta:
   stage: build
