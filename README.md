@@ -1,3 +1,5 @@
+[![Latest Release](https://code-dal1.penguintech.group/ptg/standards/docker-ansible-image/-/badges/release.svg)](https://code-dal1.penguintech.group/ptg/standards/docker-ansible-image/-/releases)
+
 # Environment setup
 Runs basic environment prepartion scripts and playbooks so you only have to work about your app.
 
