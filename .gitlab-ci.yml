@@ -98,8 +98,7 @@ alpha-dev:
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha" 
-    - if: $CI_PIPELINE_SOURCE == 'merge_request_event'
-      when: never
+
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
