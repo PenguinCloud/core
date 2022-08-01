@@ -1,4 +1,6 @@
 # PenguinTech
+variables:
+  RELEASE_VERSION: "2.2.3"
 
 workflow:
   rules:
@@ -52,16 +54,16 @@ beta2main:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:stable
-    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$RELEASE_VERSION
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
-    - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
+    - docker push $CI_REGISTRY_IMAGE:$RELEASE_VERSION
     - docker push $CI_REGISTRY_IMAGE:beta
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
 
-prod-sched:
+Main:
   stage: build
   retry:
     max: 2
@@ -72,11 +74,13 @@ prod-sched:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:stable
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$RELEASE_VERSION
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
+    - docker push $CI_REGISTRY_IMAGE:$RELEASE_VERSION
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'schedule'
+    - if: $CI_COMMIT_BRANCH == "main"
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
@@ -85,7 +89,7 @@ after_script:
 
 
 
-alpha-dev:
+alpha:
   stage: build
   retry:
     max: 2
