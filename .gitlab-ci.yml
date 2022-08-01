@@ -15,6 +15,7 @@ before_script:
   - docker pull ubuntu:20.04
   - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY 
   - echo "Milestone $CI_MERGE_REQUEST_MILESTONE"
+  - echo "Event source $CI_PIPELINE_SOURCE"
 
 alpha2beta:
   stage: build
