@@ -43,7 +43,7 @@ beta2main:
     assets:
       links:
         - name: 'Docker Image'
-          url: '$CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE'
+          url: '$CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$RELEASE_VERSION'
           link_type: 'image' 
   retry:
     max: 2
