@@ -24,28 +24,13 @@ alpha:
       - stuck_or_timeout_failure
   script:
     - docker build -t $CI_PROJECT_NAME .
-    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:beta
     - docker push $CI_REGISTRY_IMAGE:alpha
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
 beta:
-  stage: build
-  retry:
-    max: 2
-    when:
-      - runner_system_failure
-      - stuck_or_timeout_failure
-  script:
-    - docker build -t $CI_PROJECT_NAME .
-    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:beta
-    - docker push $CI_REGISTRY_IMAGE:beta
-  # Run this job in a branch where a Dockerfile exists
-  rules:
-    - if: $CI_COMMIT_BRANCH == "beta"
-
-prod-merge:
   stage: build
   release:
     tag_name: $CI_MERGE_REQUEST_MILESTONE
@@ -63,9 +48,10 @@ prod-merge:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
+    - docker push $CI_REGISTRY_IMAGE:beta
+  # Run this job in a branch where a Dockerfile exists
   rules:
-    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
-
+    - if: $CI_COMMIT_BRANCH == "beta"
 
 prod-sched:
   stage: build
@@ -83,6 +69,29 @@ prod-sched:
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == 'schedule'
+
+after_script:
+  - docker image rm $CI_PROJECT_NAME  -f
+  - docker image prune -f
+  - docker container prune -f
+
+
+
+alpha-dev:
+  stage: build
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - stuck_or_timeout_failure
+  script:
+    - docker build -t $CI_PROJECT_NAME .
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
+    - docker push $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:stable
+  # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
+  rules:
+    - if: $CI_COMMIT_BRANCH == "alpha" && $CI_PIPELINE_SOURCE != 'merge_request_event'
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
