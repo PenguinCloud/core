@@ -102,8 +102,6 @@ lint:hadolint:
 lint:ansible-linter:
   stage: pre-test
   script: 
-    - sudo apt install python3 python3-pip -y
-    - pip3 install "ansible-lint"
     - mkdir -p reports
     - ansible-lint -p entrypoint.yml -f codeclimate | tee reports/ansible.json
   artifacts:
