@@ -110,9 +110,9 @@ lint:ansible-linter:
     when: always
     reports:
       codequality:
-        - "reports/*"
+        - "reports/ansible.json"
     paths:
-      - "reports/*"
+      - "reports/ansible.json"
 snyk-sectest:
   stage: test
   script:
@@ -123,9 +123,9 @@ snyk-sectest:
     when: always
     reports:
       codequality:
-        - "reports/*"
+        - "reports/snyk.txt"
     paths:
-      - "reports/*"
+      - "reports/snyk.txt"
 grype-vulntest:
   stage: test
   rules:
@@ -138,9 +138,9 @@ grype-vulntest:
     when: always
     reports:
       codequality:
-        - "reports/*"
+        - "reports/grype.txt"
     paths:
-      - "reports/*"
+      - "reports/grype.txt"
 sast:
   stage: test
 include:
