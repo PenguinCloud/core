@@ -1,5 +1,5 @@
 - name: Ensure a job that runs at 2 and 5 exists. Creates an entry like "0 5,2 * * ls -alh > /dev/null"
-  blockinfile:
+  ansible.builtin.blockinfile:
     path: /etc/cron.hourly/update-mgmr.sh
     create: yes
     block: |
@@ -8,7 +8,7 @@
       apt autoremove -y
       apt clean -y
 - name: mode update files
-  file:
+  ansible.builtin.file:
     owner: root
     group: root
     mode: "0555"
