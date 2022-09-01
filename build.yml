@@ -8,5 +8,4 @@
     - "{{ playbook_dir }}/vars/base.yml"
   tasks:
     - name: Build image
-      include_tasks:
-        file: "{{ playbook_dir }}/jobs/build/build.yml"
+      include_tasks: "{{ playbook_dir }}/jobs/build/build.yml"
