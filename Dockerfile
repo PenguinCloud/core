@@ -20,10 +20,12 @@ COPY configs/ansible.cfg /etc/ansible/ansible.cfg
 WORKDIR /opt/core
 
 # Install Core Components
-# hadolint ignore=DL3009
-RUN apt-get update && apt-get upgrade -y &&  apt-get install -y python3 python3-pip python3-apt openssh-client && apt-get autoremove -y
-RUN pip3 install --upgrade pip
-RUN pip3 install ansible lxml
+# hadolint ignore=DL3008,DL3009
+RUN apt-get update && apt-get upgrade -y &&  apt-get install --no-install-recommends -y python3 python3-pip openssh-client  && apt-get autoremove -y
+# hadolint ignore=DL3013
+RUN pip3 install --no-cache-dir --upgrade pip
+# hadolint ignore=DL3013
+RUN pip3 install --no-cache-dir ansible lxml apt
 RUN ansible-galaxy collection install community.general
 
 ARG APP_TITLE="ptg-docker-core"
