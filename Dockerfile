@@ -21,7 +21,7 @@ WORKDIR /opt/core
 
 # Install Core Components
 RUN apt-get update && apt-get install -y python3 python3-pip python3-apt openssh-client && apt-get autoremove -y
-RUN pip3 install ansible lxml
+RUN pip3 install -r requirements.txt
 RUN ansible-galaxy collection install community.general
 
 ARG APP_TITLE="ptg-docker-core"
