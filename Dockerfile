@@ -23,7 +23,7 @@ WORKDIR /opt/core
 # hadolint ignore=DL3008,DL3009,DL3013
 RUN apt-get update && apt-get upgrade -y &&  apt-get install --no-install-recommends -y python3 python3-pip openssh-client  && apt-get autoremove -y && pip3 install --no-cache-dir --upgrade pip
 # hadolint ignore=DL3013
-RUN pip3 install --no-cache-dir ansible lxml && ansible-galaxy collection install community.general
+RUN pip3 install --no-cache-dir -r requirements.txt  && ansible-galaxy collection install community.general
 
 ARG APP_TITLE="ptg-docker-core"
 ENV APP_TITLE="ptg-docker-core"
