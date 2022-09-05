@@ -8,6 +8,7 @@ workflow:
       exists:
         - Dockerfile
 stages:
+  - pre-test
   - build
   - test
   - cleanup
@@ -20,7 +21,7 @@ before_script:
   - echo "Image $CI_REGISTRY_IMAGE"
   - echo "Event source $CI_PIPELINE_SOURCE"
 
-alpha2beta:
+alpha:
   stage: build
   retry:
     max: 2
@@ -29,13 +30,13 @@ alpha2beta:
       - stuck_or_timeout_failure
   script:
     - docker build -t $CI_PROJECT_NAME .
-    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:beta
-    - docker push $CI_REGISTRY_IMAGE:beta
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
+    - docker push $CI_REGISTRY_IMAGE:alpha
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
-    - if: $CI_COMMIT_BRANCH == "alpha" && $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH == "alpha"
 
-beta2main:
+beta:
   stage: build
   release:
     name: "CICD built release $RELEASE_VERSION"
@@ -64,8 +65,11 @@ beta2main:
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
 
-Main:
+prod-merge:
   stage: build
+  release:
+    tag_name: $CI_MERGE_REQUEST_MILESTONE
+    description: "A CICD release"
   retry:
     max: 2
     when:
@@ -75,22 +79,14 @@ Main:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:stable
-    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$RELEASE_VERSION
+    - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
-    - docker push $CI_REGISTRY_IMAGE:$RELEASE_VERSION
-  # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
+    - docker push $CI_REGISTRY_IMAGE:$CI_MERGE_REQUEST_MILESTONE
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "main" && $CI_PIPELINE_SOURCE == "merge_request_event"
 
-after_script:
-  - docker image rm $CI_PROJECT_NAME  -f
-  - docker image prune -f
-  - docker container prune -f
-
-
-
-alpha:
+prod-sched:
   stage: build
   retry:
     max: 2
@@ -107,6 +103,6 @@ alpha:
 
 
 after_script:
-  - docker image rm $CI_PROJECT_NAME  -f
+ # - docker image rm $CI_PROJECT_NAME:latest  -f
   - docker image prune -f
   - docker container prune -f
