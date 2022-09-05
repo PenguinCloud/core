@@ -1,18 +1,9 @@
 ---
 - name: Install Ansible Host Baseline
   hosts: all
-  become: yes
-  become_user: root
-  remote_user: root
+  become: true
   vars_files:
-    - vars/base.yml
+    - "{{ playbook_dir }}/vars/base.yml"
   tasks:
     - name: Build image
-      include_tasks:
-        file: jobs/build/build.yml
-        apply:
-          tags:
-            - build
-      tags:
-        - build
-
+      include_tasks: "{{ playbook_dir }}/jobs/run/update.yml"
