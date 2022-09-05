@@ -1,6 +1,4 @@
 ---
-- name: Update system cache
-  shell: |
-    apt update
-    apt dist-upgrade -y
-    apt clean
+- name: Legacy
+  ansible.builtin.debug:
+    msg: "Updates removed, update done at build"
