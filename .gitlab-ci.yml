@@ -1,6 +1,6 @@
 # PenguinTech
 variables:
-  RELEASE_VERSION: v4.1.0
+  RELEASE_VERSION: v4.1.1
 
 
 include:
