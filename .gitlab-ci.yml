@@ -3,7 +3,6 @@ variables:
   RELEASE_VERSION: v4.1.0
   REPORT_DIRECTORY: /tmp/$CI_COMMIT_SHA/reports
 
-
 include:
   - template: Code-Quality.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
@@ -36,11 +35,12 @@ prep:
     - docker info
     - docker pull ubuntu:20.04
     - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY
-    - mkdir -p $REPORT_DIRECTORY
     - pip install ansible ansible-lint
     - echo "Milestone $RELEASE_VERSION"
     - echo "Image $CI_REGISTRY_IMAGE"
     - echo "Event source $CI_PIPELINE_SOURCE"
+    - echo "Report directory $REPORT_DIRECTORY"
+    - mkdir -p $REPORT_DIRECTORY
 
 basic-code-check:
   stage: lint
