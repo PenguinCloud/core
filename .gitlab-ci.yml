@@ -5,6 +5,15 @@ variables:
 
 include:
   - template: Code-Quality.gitlab-ci.yml
+  - template: Security/SAST.gitlab-ci.yml
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+
+variables:
+  SCAN_KUBERNETES_MANIFESTS: "false"  
+
+secret_detection:
+  variables:
+    SECRET_DETECTION_HISTORIC_SCAN: "true"
 
 workflow:
   rules:
@@ -12,7 +21,7 @@ workflow:
       exists:
         - Dockerfile
 stages:
-  - pre
+  - .pre
   - lint
   - build
   - test
@@ -20,34 +29,38 @@ stages:
   - deploy
   - cleanup
 
-before_script:
-  - docker info
-  - docker pull ubuntu:20.04
-  - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY
-  - echo "Milestone $RELEASE_VERSION"
-  - echo "Image $CI_REGISTRY_IMAGE"
-  - echo "Event source $CI_PIPELINE_SOURCE"
-  - pip install ansible ansible-lint
-  - ansible-lint --version
-
-shfmt:
-  stage: pre
+prep:
+  stage: .pre
   script:
-    - shfmt -i 2 -ci -mn  -d  entrypoint.sh --tojson -w reports/shfmt-lint.json
+    - dockser info
+    - docker pull ubuntu:20.04
+    - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY
+    - pip install ansible ansible-lint
+    - echo "Milestone $RELEASE_VERSION"
+    - echo "Image $CI_REGISTRY_IMAGE"
+    - echo "Event source $CI_PIPELINE_SOURCE"
+
+basic-code-check:
+  stage: lint
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
+  before_script:
 
-ansible-lint:
-  stage: lint
-  script:
-    - ansible-lint . --progressive --profile min -f codeclimate | tee reports/ansible-lint-report.json
-
-
-
-shell check:
-  stage: lint
+    - shfmt -i 2 -ci -mn  -d  entrypoint.sh --tojson -w reports/shfmt-lint.json
   script:
     - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
+    - ansible-lint . --progressive --profile min -f codeclimate | tee reports/ansible-lint-report.json
+
+prod-code-check:
+  stage: lint
+  rules:
+    - if: $CI_COMMIT_BRANCH == "beta"
+  before_script:
+
+    - shfmt -i 2 -ci -mn  -d  entrypoint.sh --tojson -w reports/shfmt-lint.json
+  script:
+    - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
+    - ansible-lint . --profile prod -f codeclimate | tee reports/ansible-lint-report.json
 
 
 alpha2beta:
@@ -61,6 +74,15 @@ alpha2beta:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:beta
     - docker push $CI_REGISTRY_IMAGE:beta
+  artifacts:
+    reports:
+      cyclonedx:
+        - reports/ptg-standard-sbom.json
+    paths:
+      - reports/*.json
+      - reports/*.txt
+      - gl-sast-report.json
+    expire_in: 1 week
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha" && $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -89,7 +111,15 @@ beta2main:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$RELEASE_VERSION
-
+  artifacts:
+    reports:
+      cyclonedx:
+        - reports/ptg-standard-sbom.json
+    paths:
+      - reports/*.json
+      - reports/*.txt
+      - gl-sast-report.json
+    expire_in: 1 week
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
@@ -112,7 +142,15 @@ Main:
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-
+  artifacts:
+    reports:
+      cyclonedx:
+        - reports/ptg-standard-sbom.json
+    paths:
+      - reports/*.json
+      - reports/*.txt
+      - gl-sast-report.json
+    expire_in: 1 week
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
   - docker image prune -f
@@ -131,16 +169,27 @@ alpha:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
     - docker push $CI_REGISTRY_IMAGE:alpha
-  # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
-  rules:
-    - if: $CI_COMMIT_BRANCH == "alpha"
-
-code_quality:
   artifacts:
+    reports:
+      cyclonedx:
+        - reports/ptg-standard-sbom.json
     paths:
       - reports/*.json
       - reports/*.txt
+      - gl-sast-report.json
     expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == "alpha"
+
+
+
+code_quality:
+  artifacts:
+    paths: [reports/gl-code-quality-report.json]
+    expire_in: 1 week
+  
+
+
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
