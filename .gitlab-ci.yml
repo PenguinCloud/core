@@ -1,6 +1,7 @@
 # PenguinTech
 variables:
   RELEASE_VERSION: v4.1.0
+  REPORT_DIRECTORY: /tmp/$CI_COMMIT_SHA/reports
 
 
 include:
@@ -35,7 +36,7 @@ prep:
     - docker info
     - docker pull ubuntu:20.04
     - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY
-    - mkdir reports
+    - mkdir /tmp/$CI_COMMIT_SHA/reports
     - pip install ansible ansible-lint
     - echo "Milestone $RELEASE_VERSION"
     - echo "Image $CI_REGISTRY_IMAGE"
@@ -48,8 +49,9 @@ basic-code-check:
   before_script:
     - shfmt -mn -l -w entrypoint.sh  
   script:
-    - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
-    - ansible-lint . --progressive --profile min -f codeclimate | tee reports/ansible-lint-report.json
+    
+    - shellcheck *.sh  | tee  $REPORT_DIRECTORY/shellcheck-lint-report.txt
+    - ansible-lint . --progressive --profile min -f codeclimate | tee $REPORT_DIRECTORY/ansible-lint-report.json
 
 prod-code-check:
   stage: lint
@@ -58,8 +60,8 @@ prod-code-check:
   before_script:
     - shfmt -i 2 -ci -mn  -d  entrypoint.sh  
   script:
-    - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
-    - ansible-lint . --profile prod -f codeclimate | tee reports/ansible-lint-report.json
+    - shellcheck *.sh  | tee  $REPORT_DIRECTORY/shellcheck-lint-report.txt
+    - ansible-lint . --profile prod -f codeclimate | tee $REPORT_DIRECTORY/ansible-lint-report.json
 
 
 alpha2beta:
@@ -76,10 +78,10 @@ alpha2beta:
   artifacts:
     reports:
       cyclonedx:
-        - reports/ptg-standard-sbom.json
+        - $REPORT_DIRECTORY/ptg-standard-sbom.json
     paths:
-      - reports/*.json
-      - reports/*.txt
+      - $REPORT_DIRECTORY/*.json
+      - $REPORT_DIRECTORY/*.txt
       - gl-sast-report.json
     expire_in: 1 week
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
@@ -113,10 +115,10 @@ beta2main:
   artifacts:
     reports:
       cyclonedx:
-        - reports/ptg-standard-sbom.json
+        - $REPORT_DIRECTORY/ptg-standard-sbom.json
     paths:
-      - reports/*.json
-      - reports/*.txt
+      - $REPORT_DIRECTORY/*.json
+      - $REPORT_DIRECTORY/*.txt
       - gl-sast-report.json
     expire_in: 1 week
   # Run this job in a branch where a Dockerfile exists
@@ -144,13 +146,12 @@ Main:
   artifacts:
     reports:
       cyclonedx:
-        - reports/ptg-standard-sbom.json
+        - $REPORT_DIRECTORY/ptg-standard-sbom.json
     paths:
-      - reports/*.json
-      - reports/*.txt
+      - $REPORT_DIRECTORY/*.json
+      - $REPORT_DIRECTORY/*.txt
       - gl-sast-report.json
     expire_in: 1 week
-
 
 alpha:
   stage: build
@@ -166,10 +167,10 @@ alpha:
   artifacts:
     reports:
       cyclonedx:
-        - reports/ptg-standard-sbom.json
+        - $REPORT_DIRECTORY/ptg-standard-sbom.json
     paths:
-      - reports/*.json
-      - reports/*.txt
+      - $REPORT_DIRECTORY/*.json
+      - $REPORT_DIRECTORY/*.txt
       - gl-sast-report.json
     expire_in: 1 week
   rules:
@@ -178,7 +179,7 @@ alpha:
 
 code_quality:
   artifacts:
-    paths: [reports/gl-code-quality-report.json]
+    paths: [$REPORT_DIRECTORY/gl-code-quality-report.json]
     expire_in: 1 week
   
 runner-clean:
@@ -187,3 +188,4 @@ runner-clean:
     - docker image rm $CI_PROJECT_NAME  -f
     - docker image prune -f
     - docker container prune -f
+    - rm -rf $REPORT_DIRECTORY
