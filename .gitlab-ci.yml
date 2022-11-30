@@ -2,7 +2,6 @@
 variables:
   RELEASE_VERSION: v4.1.1
 
-
 include:
   - template: Code-Quality.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
@@ -49,10 +48,16 @@ basic-code-check:
   before_script:
     - shfmt -mn -l -w entrypoint.sh  
   script:
-    
     - shellcheck *.sh  | tee  /tmp/$CI_COMMIT_SHA/reports/shellcheck-lint-report.txt
     - ansible-lint . --exclude .gitlab-ci.yml -x expirimental --profile basic -f codeclimate | tee /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
-
+  artifacts:
+    reports:
+      cyclonedx:
+        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
+    paths:
+      - /tmp/$CI_COMMIT_SHA/reports/*
+    expire_in: 1 week
+    
 prod-code-check:
   stage: lint
   rules:
@@ -63,9 +68,15 @@ prod-code-check:
     - shellcheck *.sh  | tee  /tmp/$CI_COMMIT_SHA/reports/shellcheck-lint-report.txt
     - ansible-lint . --exclude .gitlab-ci.yml -x expirimental --profile safety -f codeclimate | tee /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
 
-
 alpha2beta:
   stage: build
+  artifacts:
+    reports:
+      cyclonedx:
+        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
+    paths:
+      - /tmp/$CI_COMMIT_SHA/reports/*
+    expire_in: 1 week
   retry:
     max: 2
     when:
@@ -90,6 +101,13 @@ beta2main:
         - name: 'Docker Image'
           url: 'https://$CI_REGISTRY_IMAGE:$RELEASE_VERSION'
           link_type: 'image'
+  artifacts:
+    reports:
+      cyclonedx:
+        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
+    paths:
+      - /tmp/$CI_COMMIT_SHA/reports/*
+    expire_in: 1 week
   retry:
     max: 2
     when:
@@ -114,6 +132,13 @@ Main:
     when:
       - runner_system_failure
       - stuck_or_timeout_failure
+  artifacts:
+    reports:
+      cyclonedx:
+        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
+    paths:
+      - /tmp/$CI_COMMIT_SHA/reports/*
+    expire_in: 1 week
   script:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:latest
@@ -126,7 +151,6 @@ Main:
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
 
-
 alpha:
   stage: build
   retry:
@@ -138,15 +162,22 @@ alpha:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
     - docker push $CI_REGISTRY_IMAGE:alpha
-  
+  artifacts:
+    reports:
+      cyclonedx:
+        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
+    paths:
+      - /tmp/$CI_COMMIT_SHA/reports/*
+    expire_in: 1 week
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
-
 code_quality:
   artifacts:
-    paths: [/tmp/$CI_COMMIT_SHA/reports/gl-code-quality-report.json]
-    expire_in: 1 week
+    paths: 
+      - gl-code-quality-report.json
+      - /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
+    expire_in: 1 month
   
 runner-postrun:
   stage: cleanup
@@ -155,11 +186,3 @@ runner-postrun:
     - docker image prune -f
     - docker container prune -f
     - rm -rf /tmp/$CI_COMMIT_SHA/reports
-  artifacts:
-    reports:
-      cyclonedx:
-        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
-    paths:
-      - /tmp/$CI_COMMIT_SHA/reports/*.json
-      - /tmp/$CI_COMMIT_SHA/reports/*.txt
-    expire_in: 1 week
