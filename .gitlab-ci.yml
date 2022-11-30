@@ -2,15 +2,22 @@
 variables:
   RELEASE_VERSION: v4.1.0
 
+
+include:
+  - template: Code-Quality.gitlab-ci.yml
+
 workflow:
   rules:
     - if: $CI_COMMIT_BRANCH
       exists:
         - Dockerfile
 stages:
+  - pre
   - lint
   - build
   - test
+  - integration
+  - deploy
   - cleanup
 
 before_script:
@@ -23,6 +30,13 @@ before_script:
   - pip install ansible ansible-lint
   - ansible-lint --version
 
+shfmt:
+  image: mvdan/shfmt:v3.2.0-alpine
+  stage: pre
+  before_script:
+    - shfmt -version
+  script:
+    - shfmt -i 2 -ci -d scripts  # path to your shell scripts
 
 ansible-lint:
   stage: lint
@@ -127,8 +141,9 @@ alpha:
 code_quality:
   artifacts:
     paths:
-      - reports/*
-      expire_in: 1 week
+      - reports/*.json
+      - reports/*.txt
+    expire_in: 1 week
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
