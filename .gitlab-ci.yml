@@ -75,15 +75,6 @@ alpha2beta:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:beta
     - docker push $CI_REGISTRY_IMAGE:beta
-  artifacts:
-    reports:
-      cyclonedx:
-        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
-    paths:
-      - /tmp/$CI_COMMIT_SHA/reports/*.json
-      - /tmp/$CI_COMMIT_SHA/reports/*.txt
-      - gl-sast-report.json
-    expire_in: 1 week
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha" && $CI_PIPELINE_SOURCE == "merge_request_event"
@@ -112,15 +103,6 @@ beta2main:
     - docker push $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:stable
     - docker push $CI_REGISTRY_IMAGE:$RELEASE_VERSION
-  artifacts:
-    reports:
-      cyclonedx:
-        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
-    paths:
-      - /tmp/$CI_COMMIT_SHA/reports/*.json
-      - /tmp/$CI_COMMIT_SHA/reports/*.txt
-      - gl-sast-report.json
-    expire_in: 1 week
   # Run this job in a branch where a Dockerfile exists
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
@@ -143,15 +125,7 @@ Main:
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
     - if: $CI_COMMIT_BRANCH == "main"
-  artifacts:
-    reports:
-      cyclonedx:
-        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
-    paths:
-      - /tmp/$CI_COMMIT_SHA/reports/*.json
-      - /tmp/$CI_COMMIT_SHA/reports/*.txt
-      - gl-sast-report.json
-    expire_in: 1 week
+
 
 alpha:
   stage: build
@@ -164,15 +138,7 @@ alpha:
     - docker build -t $CI_PROJECT_NAME .
     - docker image tag  $CI_PROJECT_NAME $CI_REGISTRY_IMAGE:alpha
     - docker push $CI_REGISTRY_IMAGE:alpha
-  artifacts:
-    reports:
-      cyclonedx:
-        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
-    paths:
-      - /tmp/$CI_COMMIT_SHA/reports/*.json
-      - /tmp/$CI_COMMIT_SHA/reports/*.txt
-      - gl-sast-report.json
-    expire_in: 1 week
+  
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
@@ -182,10 +148,18 @@ code_quality:
     paths: [/tmp/$CI_COMMIT_SHA/reports/gl-code-quality-report.json]
     expire_in: 1 week
   
-runner-clean:
+runner-postrun:
   stage: cleanup
   script:
     - docker image rm $CI_PROJECT_NAME  -f
     - docker image prune -f
     - docker container prune -f
     - rm -rf /tmp/$CI_COMMIT_SHA/reports
+  artifacts:
+    reports:
+      cyclonedx:
+        - /tmp/$CI_COMMIT_SHA/reports/ptg-standard-sbom.json
+    paths:
+      - /tmp/$CI_COMMIT_SHA/reports/*.json
+      - /tmp/$CI_COMMIT_SHA/reports/*.txt
+    expire_in: 1 week
