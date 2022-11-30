@@ -5,7 +5,7 @@ variables:
 include:
   - template: Code-Quality.gitlab-ci.yml
   - template: Security/SAST.gitlab-ci.yml
-  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  #- template: Jobs/Secret-Detection.gitlab-ci.yml
 
 variables:
   SCAN_KUBERNETES_MANIFESTS: "false"  
