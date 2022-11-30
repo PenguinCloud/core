@@ -1,6 +1,6 @@
 # PenguinTech
 variables:
-  RELEASE_VERSION: v2.2.0
+  RELEASE_VERSION: v4.1.0
 
 workflow:
   rules:
@@ -99,10 +99,11 @@ prod-sched:
     - docker push $CI_REGISTRY_IMAGE:alpha
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
-    - if: $CI_COMMIT_BRANCH == "alpha"
+    - if: $CI_COMMIT_BRANCH == "main"
 
 
 after_script:
  # - docker image rm $CI_PROJECT_NAME:latest  -f
   - docker image prune -f
   - docker container prune -f
+
