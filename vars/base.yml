@@ -1,5 +1,5 @@
 ---
-dns: "{{ lookup('env', 'DNS') | default( "1.1.1.1", True) }}"
+dns: "{{ lookup('env', 'DNS') | default( '1.1.1.1', True) }}"
 interfaces:
   public: "{{ lookup('env','PUBLIC_INTERFACE') | default('enp1s0',True)}}"
   private: "{{ lookup('env', 'INTERNAL_INTERFACE') | default('enp6s0', True)}}"
