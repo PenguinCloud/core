@@ -124,15 +124,11 @@ alpha:
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
-reports:
-  stage: test
-  code_quality:
-    artifacts:
-      paths:
-        - reports/*
+code_quality:
+  artifacts:
+    paths:
+      - reports/*
       expire_in: 1 week
-  rules:
-    - if: $CI_COMMIT_BRANCH == "alpha"
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
