@@ -10,9 +10,9 @@ include:
 variables:
   SCAN_KUBERNETES_MANIFESTS: "false"  
 
-secret_detection:
-  variables:
-    SECRET_DETECTION_HISTORIC_SCAN: "true"
+#secret_detection:
+#  variables:
+#    SECRET_DETECTION_HISTORIC_SCAN: "true"
 
 workflow:
   rules:
