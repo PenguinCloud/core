@@ -32,7 +32,7 @@ stages:
 prep:
   stage: .pre
   script:
-    - dockser info
+    - docker info
     - docker pull ubuntu:20.04
     - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY
     - pip install ansible ansible-lint
