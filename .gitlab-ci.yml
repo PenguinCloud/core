@@ -36,7 +36,7 @@ prep:
     - docker info
     - docker pull ubuntu:20.04
     - cat ~/.docker/token | docker login --password-stdin -u cicd  $CI_REGISTRY
-    - mkdir -p /tmp/$CI_COMMIT_SHA/reports
+    - mkdir -p $REPORT_DIRECTORY
     - pip install ansible ansible-lint
     - echo "Milestone $RELEASE_VERSION"
     - echo "Image $CI_REGISTRY_IMAGE"
