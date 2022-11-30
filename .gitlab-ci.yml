@@ -47,7 +47,7 @@ basic-code-check:
     - if: $CI_COMMIT_BRANCH == "alpha"
   before_script:
 
-    - shfmt --tojson -i 2 -ci -mn  -d  entrypoint.sh  | tee reports/shfmt-lint.json
+    - shfmt -i 2 -ci -mn  -d  entrypoint.sh  | tee reports/shfmt-lint.json
   script:
     - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
     - ansible-lint . --progressive --profile min -f codeclimate | tee reports/ansible-lint-report.json
