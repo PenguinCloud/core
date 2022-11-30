@@ -156,8 +156,6 @@ after_script:
   - docker image prune -f
   - docker container prune -f
 
-
-
 alpha:
   stage: build
   retry:
@@ -182,16 +180,14 @@ alpha:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
 
-
 code_quality:
   artifacts:
     paths: [reports/gl-code-quality-report.json]
     expire_in: 1 week
   
-
-
-
-after_script:
-  - docker image rm $CI_PROJECT_NAME  -f
-  - docker image prune -f
-  - docker container prune -f
+runner-clean:
+  stage: cleanup
+  script:
+    - docker image rm $CI_PROJECT_NAME  -f
+    - docker image prune -f
+    - docker container prune -f
