@@ -8,6 +8,7 @@ workflow:
       exists:
         - Dockerfile
 stages:
+  - lint
   - build
   - test
   - cleanup
@@ -19,6 +20,24 @@ before_script:
   - echo "Milestone $RELEASE_VERSION"
   - echo "Image $CI_REGISTRY_IMAGE"
   - echo "Event source $CI_PIPELINE_SOURCE"
+  - pip install ansible ansible-lint
+  - ansible-lint --version
+
+
+ansible-lint:
+  stage: lint
+  script:
+    - ansible-lint . --progressive --profile min -f codeclimate > reports/ansible-lint-report.json
+
+
+
+shell check:
+  stage: lint
+  before_script:
+    - shellcheck --version
+  script:
+    - shellcheck *.sh  > reports/shellcheck-lint-report.txt
+
 
 alpha2beta:
   stage: build
@@ -103,8 +122,17 @@ alpha:
     - docker push $CI_REGISTRY_IMAGE:alpha
   # Run this job in a branch where a Dockerfile exists && on a scheduled build on main
   rules:
-    - if: $CI_COMMIT_BRANCH == "main"
+    - if: $CI_COMMIT_BRANCH == "alpha"
 
+reports:
+  stage: test
+  code_quality:
+    artifacts:
+      paths:
+        - reports/*
+      expire_in: 1 week
+  rules:
+    - if: $CI_COMMIT_BRANCH == "alpha"
 
 after_script:
   - docker image rm $CI_PROJECT_NAME  -f
