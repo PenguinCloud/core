@@ -27,7 +27,7 @@ before_script:
 ansible-lint:
   stage: lint
   script:
-    - ansible-lint . --progressive --profile min -f codeclimate > reports/ansible-lint-report.json
+    - ansible-lint . --progressive --profile min -f codeclimate | tee reports/ansible-lint-report.json
 
 
 
@@ -36,7 +36,7 @@ shell check:
   before_script:
     - shellcheck --version
   script:
-    - shellcheck *.sh  > reports/shellcheck-lint-report.txt
+    - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
 
 
 alpha2beta:
