@@ -51,7 +51,7 @@ basic-code-check:
   script:
     
     - shellcheck *.sh  | tee  /tmp/$CI_COMMIT_SHA/reports/shellcheck-lint-report.txt
-    - ansible-lint . -x expirimental --profile basic -f codeclimate | tee /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
+    - ansible-lint . --exclude .gitlab-ci.yml -x expirimental --profile basic -f codeclimate | tee /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
 
 prod-code-check:
   stage: lint
@@ -61,7 +61,7 @@ prod-code-check:
     - shfmt -i 2 -ci -mn  -d  entrypoint.sh  
   script:
     - shellcheck *.sh  | tee  /tmp/$CI_COMMIT_SHA/reports/shellcheck-lint-report.txt
-    - ansible-lint . -x expirimental --profile safety -f codeclimate | tee /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
+    - ansible-lint . --exclude .gitlab-ci.yml -x expirimental --profile safety -f codeclimate | tee /tmp/$CI_COMMIT_SHA/reports/ansible-lint-report.json
 
 
 alpha2beta:
