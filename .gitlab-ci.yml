@@ -31,12 +31,11 @@ before_script:
   - ansible-lint --version
 
 shfmt:
-  image: mvdan/shfmt:v3.2.0-alpine
   stage: pre
-  before_script:
-    - shfmt -version
   script:
-    - shfmt -i 2 -ci -d scripts  # path to your shell scripts
+    - shfmt -i 2 -ci *.sh  # path to your shell scripts
+  rules:
+    - if: $CI_COMMIT_BRANCH == "alpha"
 
 ansible-lint:
   stage: lint
@@ -47,8 +46,6 @@ ansible-lint:
 
 shell check:
   stage: lint
-  before_script:
-    - shellcheck --version
   script:
     - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
 
