@@ -56,7 +56,6 @@ prod-code-check:
   rules:
     - if: $CI_COMMIT_BRANCH == "beta"
   before_script:
-
     - shfmt -i 2 -ci -mn  -d  entrypoint.sh  
   script:
     - shellcheck *.sh  | tee  reports/shellcheck-lint-report.txt
@@ -151,10 +150,7 @@ Main:
       - reports/*.txt
       - gl-sast-report.json
     expire_in: 1 week
-after_script:
-  - docker image rm $CI_PROJECT_NAME  -f
-  - docker image prune -f
-  - docker container prune -f
+
 
 alpha:
   stage: build
