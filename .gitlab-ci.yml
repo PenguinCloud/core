@@ -33,7 +33,7 @@ before_script:
 shfmt:
   stage: pre
   script:
-    - shfmt -i 2 -ci *.sh  # path to your shell scripts
+    - shfmt -i 2 -ci -mn  -d  entrypoint.sh --tojson -w reports/shfmt-lint.json
   rules:
     - if: $CI_COMMIT_BRANCH == "alpha"
 
