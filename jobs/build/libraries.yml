@@ -1,4 +1,8 @@
 ---
+- name: Add python3.11 stable repository from PPA and install its signing key on Debian target
+  ansible.builtin.apt_repository:
+    repo: 'ppa:deadsnakes/ppa'
+    codename: jammy
 - name: Install Core APT Libraries
   apt:
     pkg:
@@ -36,6 +40,9 @@
       - kubernetes
       - ansible
     executable: pip3
-
+- name: Get minio client
+  url: https://dl.minio.io/client/mc/release/linux-amd64/mc
+  dest: /usr/local/bin/mc
+  mode: 0555
 
 

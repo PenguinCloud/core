@@ -1,5 +1,9 @@
 FROM ubuntu:20.04
 LABEL maintainer="Penguin Technologies Group LLC"
+LABEL company="Penguin Tech Group LLC"
+LABEL org.opencontainers.image.authors="info@penguintech.group"
+LABEL license="GNU AGPL3"
+
 
 # Set Timezone
 ARG TZ=America/Chicago
