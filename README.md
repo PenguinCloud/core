@@ -1,4 +1,4 @@
-[![Publish Docker image](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml/badge.svg)](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml)
+[![Publish Docker image](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml/badge.svg)](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml) [![version](https://img.shields.io/badge/version-5.0.0-yellow.svg)](https://semver.org)
 
 # Environment setup
 Runs basic environment prepartion scripts and playbooks so you only have to work about your app.
