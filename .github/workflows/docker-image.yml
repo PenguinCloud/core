@@ -14,6 +14,8 @@ on:
     types: [published]
   push:
     branches: ['release','main']
+  schedule:
+    - cron: 1 1 * * 1
 
 jobs:
   push_to_registries:
