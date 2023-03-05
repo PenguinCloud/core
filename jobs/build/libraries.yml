@@ -1,8 +1,5 @@
 ---
-- name: Add python3.11 stable repository from PPA and install its signing key on Debian target
-  ansible.builtin.apt_repository:
-    repo: 'ppa:deadsnakes/ppa'
-    codename: jammy
+
 - name: Install Core APT Libraries
   apt:
     pkg:
@@ -15,6 +12,7 @@
       - dnsutils
       - g++
       - git
+      - gnupg2
       - inetutils-tools
       - gnupg2
       - lsof
@@ -22,7 +20,6 @@
       - nano
       - net-tools
       - openssh-client
-      - python3.11
       - python3-pip
       - software-properties-common
       - sudo
@@ -33,6 +30,10 @@
       - zip
       - vim
     state: present
+- name: Add python3.11 stable repository from PPA and install its signing key on Debian target
+  ansible.builtin.apt_repository:
+    repo: 'ppa:deadsnakes/ppa'
+    codename: jammy
 - name: Install Pip libs
   pip:
     name:
@@ -46,5 +47,9 @@
     dest: /usr/local/bin/mc
     mode: 0555
   ignore_errors: yes
+- name: install Python 3.11
+  apt:
+    pkg:
+      - python3.11
 
 
