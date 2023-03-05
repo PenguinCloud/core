@@ -22,7 +22,7 @@
       - nano
       - net-tools
       - openssh-client
-      - python3
+      - python3.11
       - python3-pip
       - software-properties-common
       - sudo
@@ -41,8 +41,10 @@
       - ansible
     executable: pip3
 - name: Get minio client
-  url: https://dl.minio.io/client/mc/release/linux-amd64/mc
-  dest: /usr/local/bin/mc
-  mode: 0555
+  ansible.builtin.get_url:
+    url: https://dl.minio.io/client/mc/release/linux-amd64/mc
+    dest: /usr/local/bin/mc
+    mode: 0555
+  ignore_errors: yes
 
 
