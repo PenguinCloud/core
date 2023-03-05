@@ -16,7 +16,8 @@ on:
     branches: ['release','main']
   schedule:
     - cron: 1 1 * * 1
-
+env:
+  REPO: core
 jobs:
   push_to_registries:
     name: Push Docker image to multiple registries
@@ -46,7 +47,7 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: |
-            my-docker-hub-namespace/my-docker-hub-repository
+            ${{ secrets.DOCKER_USERNAME }}/$REPO
             ghcr.io/${{ github.repository }}
       
       - name: Build and push Docker images
