@@ -1,4 +1,4 @@
-[![Latest Release](https://code-dal1.penguintech.group/ptg/standards/docker-ansible-image/-/badges/release.svg)](https://code-dal1.penguintech.group/ptg/standards/docker-ansible-image/-/releases)
+[![Publish Docker image](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml/badge.svg)](https://github.com/PenguinCloud/core/actions/workflows/docker-image.yml)
 
 # Environment setup
 Runs basic environment prepartion scripts and playbooks so you only have to work about your app.
