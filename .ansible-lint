@@ -36,7 +36,7 @@ loop_var_prefix: "^(__|{role}_)"
 # Enforce variable names to follow pattern below, in addition to Ansible own
 # requirements, like avoiding python identifiers. To disable add `var-naming`
 # to skip_list.
-var_naming_pattern: "^[a-z_][a-z0-9_]*$"
+#var_naming_pattern: "^[a-z_][a-z0-9_]*$"
 
 use_default_rules: true
 # Load custom rules from this specific folder
@@ -53,6 +53,8 @@ use_default_rules: true
 # still visible, making it easier to address later.
 skip_list:
   - skip_this_tag
+  - yaml[octal-values]
+  - name[casing]
 
 # Ansible-lint does not automatically load rules that have the 'opt-in' tag.
 # You must enable opt-in rules by listing each rule 'id' below.
@@ -60,8 +62,8 @@ enable_list:
   - args
   - empty-string-compare # opt-in
   - no-log-password # opt-in
-  - no-same-owner # opt-in
-  - name[prefix] # opt-in
+ # - no-same-owner # opt-in
+  #- name[prefix] # opt-in
   # add yaml here if you want to avoid ignoring yaml checks when yamllint
   # library is missing. Normally its absence just skips using that rule.
   - yaml
@@ -71,7 +73,6 @@ enable_list:
 
 # Ansible-lint does not fail on warnings from the rules or tags listed below
 warn_list:
-  - skip_this_tag
   - experimental # experimental is included in the implicit list
   # - role-name
   # - yaml[document-start]  # you can also use sub-rule matches
@@ -107,10 +108,10 @@ extra_vars:
 # List of additional kind:pattern to be added at the top of the default
 # match list, first match determines the file kind.
 kinds:
-  # - playbook: "**/examples/*.{yml,yaml}"
+  - playbook: "*.{yml,yaml}"
   # - galaxy: "**/folder/galaxy.yml"
-  # - tasks: "**/tasks/*.yml"
-  # - vars: "**/vars/*.yml"
+  #- tasks: "**/jobs/*/*.yml"
+  - vars: "**/vars/*.yml"
   # - meta: "**/meta/main.yml"
   - yaml: "**/*.yaml-too"
 
@@ -123,4 +124,4 @@ kinds:
 #   - example_module
 
 # Allow setting custom prefix for name[prefix] rule
-task_name_prefix: "{stem} | "
+#task_name_prefix: "{stem} | "

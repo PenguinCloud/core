@@ -1,7 +1,7 @@
 ---
-- name: Install needed libaries
-  include_tasks: "{{ playbook_dir }}/jobs/build/libraries.yml"
-- name: Install user
-  include_tasks: "{{ playbook_dir }}/jobs/build/user.yml"
-- name: Install autoupdate
-  include_tasks: "{{ playbook_dir }}/jobs/build/update.yml"
+- name: Build prep install needed libaries
+  include_tasks: "libraries.yml"
+- name: Build prep Build prep install user
+  include_tasks: "user.yml"
+- name: Build prep install autoupdate
+  include_tasks: "update.yml"

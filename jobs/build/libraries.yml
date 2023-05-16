@@ -46,10 +46,8 @@
     url: https://dl.minio.io/client/mc/release/linux-amd64/mc
     dest: /usr/local/bin/mc
     mode: 0555
-  ignore_errors: yes
+  ignore_errors: true
 - name: install Python 3.11
   apt:
     pkg:
       - python3.11
-
-
