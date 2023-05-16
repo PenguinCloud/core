@@ -4,10 +4,10 @@ services:
   ptg-ansible:
     build:
       context: .
-      #args:
+      # args:
     image: penguintech/ubuntu-ansible
     volumes:
-      - ptg-vars:/opt/core/vars #This will be /opt/manager/vars for standard apps
+      - ptg-vars:/opt/core/vars # This will be /opt/manager/vars for standard apps
     networks:
       - buildme
 volumes:
