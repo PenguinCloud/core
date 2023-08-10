@@ -1,4 +1,4 @@
 pip>=21.1
 urllib3>=1.26.5
-ansible
+ansible>=5.0.0a1
 lxml
