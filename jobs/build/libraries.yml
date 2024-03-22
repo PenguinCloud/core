@@ -1,0 +1,46 @@
+---
+
+- name: Install Core APT Libraries
+  apt:
+    pkg:
+      - apt-transport-https
+      - apt-utils
+      - cron
+      - g++
+      - git
+      - gnupg2
+      - gnupg24
+      - nano
+      - net-tools
+      - openssh-client
+      - python3-pip
+      - software-properties-common
+      - sudo
+      - uidmap
+      - unzip
+      - uuid
+      - uuid-dev
+      - zip
+      - vim
+    state: present
+- name: Add python3.11 stable repository from PPA and install its signing key on Debian target
+  ansible.builtin.apt_repository:
+    repo: 'ppa:deadsnakes/ppa'
+    codename: jammy
+- name: Install Pip libs
+  pip:
+    name:
+    #  - openshift/
+     # - kubernetes
+      - ansible
+    executable: pip3
+- name: Get minio client
+  ansible.builtin.get_url:
+    url: https://dl.minio.io/client/mc/release/linux-amd64/mc
+    dest: /usr/local/bin/mc
+    mode: 0555
+  ignore_errors: true
+- name: install Python 3.11
+  apt:
+    pkg:
+      - python3.11

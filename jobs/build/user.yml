@@ -1,0 +1,20 @@
+---
+- name: Create System PTG User
+  ansible.builtin.user:
+    name: "{{ run.user }}"
+    generate_ssh_key: true
+    ssh_key_bits: 4096
+    ssh_key_file: .ssh/id_rsa
+    shell: /bin/bash
+    groups: sudo
+    comment: PTG System User
+- name: Create SSHD directory if doesnt exist
+  file:
+    state: directory
+    path: /etc/sshd
+- name: Update SSH Config
+  copy:
+    src: "{{ playbook_dir }}/configs/sshd_config"
+    dest: /etc/sshd/sshd_config
+    force: true
+    mode: "0544"

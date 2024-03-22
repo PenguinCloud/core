@@ -1,0 +1,32 @@
+---
+- name: Install Ansible Host Baseline
+  hosts: all
+  become: yes
+  vars_files:
+    - "{{ playbook_dir }}/vars/base.yml"
+  tasks:
+    - name: Build container image
+      tags: build
+      block:
+        - name: Install libraries
+          ansible.builtin.include_tasks: "{{ playbook_dir }}/jobs/build/libraries.yml"
+          apply:
+            tags:
+              - build
+        - name: Install  user
+          ansible.builtin.include_tasks: "{{ playbook_dir }}/jobs/build/user.yml"
+          apply:
+            tags:
+              - build
+
+    - name: run and execute runtime tasks for container
+      tags: 
+        - run
+        - never
+      block: 
+        - name: Include networking
+          ansible.builtin.include_tasks: "{{ playbook_dir }}/jobs/run/networking.yml"
+          apply:
+            tags:
+              - run
+60-

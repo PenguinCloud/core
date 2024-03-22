@@ -1,0 +1,11 @@
+---
+- name: copy template to public interface
+  template:
+    src: "{{ playbook_dir }}/configs/10-netplan.j2"
+    dest: "/etc/netplan/10-{{ interfaces.public }}.yaml"
+- name: copy template to internal interface
+  template:
+    src: "{{ playbook_dir }}/configs/20-netplan.j2"
+    dest: "/etc/netplan/20-{{ interfaces.private}}.yaml"
+- name: Initiate netplan
+  shell: netplan apply

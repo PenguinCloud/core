@@ -1,0 +1,11 @@
+---
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    {{ interfaces.public}}:
+      dhcp4: yes
+      dhcp4-overrides:
+        use-dns: no
+      nameservers:
+        addresses: {{ dns }}

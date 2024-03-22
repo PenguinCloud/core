@@ -1,0 +1,14 @@
+---
+dns: "{{ lookup('env', 'DNS') | default( '1.1.1.1', True) }}"
+interfaces:
+  public: "{{ lookup('env','PUBLIC_INTERFACE') | default('enp1s0',True)}}"
+  private: "{{ lookup('env', 'INTERNAL_INTERFACE') | default('enp6s0', True)}}"
+kmod: "{{ lookup('env', 'KERNEL_MODS') | default('yes', True)}}"
+docker: "{{ lookup('env', 'DOCKER') | default('yes', True)}}"
+update: "{{ lookup('env', 'CRON_UPDATE') | default('yes', True)}}"
+ip:
+  private: "{{ lookup('env', 'IP_PRIVATE') | default('10.0.0.1/24', True)}}"
+run:
+  user: ptg-user
+app:
+  title: "{{ lookup('ansible.builtin.env', 'APP_TILE') }}"

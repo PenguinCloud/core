@@ -1,0 +1,4 @@
+---
+- name: Legacy
+  ansible.builtin.debug:
+    msg: "Updates removed, update done at build"

@@ -1,0 +1,3 @@
+- name: temp
+  ansible.builtin.debug:
+    msg: "Core Image ready"
