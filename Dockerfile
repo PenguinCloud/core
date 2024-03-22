@@ -28,13 +28,13 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y apt-transport-htt
 RUN apt-get install -y python3 python3-pip openssh-client  && apt-get autoremove -y
 
 # hadolint ignore=DL3013
-RUN  pip3 install --no-cache-dir --upgrade pip 
+RUN  pip3 install --no-cache-dir --upgrade pip && pip3 install --no-cache-dir -r configs/requirements3.txt
 COPY configs/ansible.cfg /etc/ansible/ansible.cfg
 
 ARG APP_TITLE="ptg-docker-core"
 ENV APP_TITLE="ptg-docker-core"
 # Build backdrop
-RUN ansible-playbook /opt/core/entrypoint.yml --connection=local --tags=build
+RUN ansible-playbook entrypoint.yml --connection=local --tags=build
 
 # Run and Execute live
 ENTRYPOINT ["/usr/bin/bash","entrypoint.sh"]
