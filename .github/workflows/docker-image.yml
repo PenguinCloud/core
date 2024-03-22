@@ -18,7 +18,7 @@ on:
     - cron: 1 1 * * 1
 env:
   REPO: core
-  RELEASE: ${{ github.event.release.tag_name }}
+  RELEASE: v5.1.1
 jobs:
   push_to_registries:
     name: Push Docker image to multiple registries
@@ -69,7 +69,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/penguincloud/${{ env.REPO }}:latest, ghcr.io/penguincloud/${{ env.REPO }}:nightly, penguincloud/${{ env.REPO }}:${{ env.Release }}
+          tags: ghcr.io/penguincloud/${{ env.REPO }}:latest, ghcr.io/penguincloud/${{ env.REPO }}:nightly, penguincloud/${{ env.REPO }}:${{ env.RELEASE }}
           labels: ${{ steps.meta.outputs.labels }}
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
