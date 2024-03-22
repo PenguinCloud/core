@@ -6,6 +6,6 @@
 - name: copy template to internal interface
   template:
     src: "{{ playbook_dir }}/configs/20-netplan.j2"
-    dest: "/etc/netplan/20-{{ interfaces.private}}.yaml"
+    dest: "/etc/netplan/20-{{ interfaces.private }}.yaml"
 - name: Initiate netplan
-  shell: netplan apply
+  ansible.builtin.command: netplan apply

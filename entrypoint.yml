@@ -9,25 +9,25 @@
       tags: build
       block:
         - name: Install libraries
-          ansible.builtin.include_tasks: 
+          ansible.builtin.include_tasks:
             file: "{{ playbook_dir }}/jobs/build/libraries.yml"
             apply:
               tags:
                 - build
         - name: Install  user
-          ansible.builtin.include_tasks: 
+          ansible.builtin.include_tasks:
             file: "{{ playbook_dir }}/jobs/build/user.yml"
             apply:
               tags:
                 - build
 
     - name: run and execute runtime tasks for container
-      tags: 
+      tags:
         - run
         - never
-      block: 
+      block:
         - name: Include networking
-          ansible.builtin.include_tasks: 
+          ansible.builtin.include_tasks:
             file: "{{ playbook_dir }}/jobs/run/networking.yml"
             apply:
               tags:
