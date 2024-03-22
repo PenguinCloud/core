@@ -34,7 +34,7 @@ COPY configs/ansible.cfg /etc/ansible/ansible.cfg
 ARG APP_TITLE="ptg-docker-core"
 ENV APP_TITLE="ptg-docker-core"
 # Build backdrop
-RUN ansible-playbook /opt/core/build.yml --connection=local --tags build
+RUN ansible-playbook /opt/core/entrypoint.yml --connection=local --tags=build
 
 # Run and Execute live
 ENTRYPOINT ["/usr/bin/bash","entrypoint.sh"]
