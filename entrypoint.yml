@@ -1,7 +1,7 @@
 ---
 - name: Install Ansible Host Baseline
   hosts: all
-  become: yes
+  become: true
   vars_files:
     - "{{ playbook_dir }}/vars/base.yml"
   tasks:
