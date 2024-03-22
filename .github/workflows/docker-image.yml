@@ -12,7 +12,7 @@ name: Publish Docker image
 on:
   release:
     types: [published]
-  push:*
+  push: *
     branches: ['release','main']
   schedule:
     - cron: 1 1 * * 1
