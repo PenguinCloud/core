@@ -10,6 +10,7 @@
       - git
       - gnupg2
       - nano
+      - net-tools
       - python3-pip
       - software-properties-common
       - sudo
